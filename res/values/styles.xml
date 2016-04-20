@@ -1,0 +1,69 @@
+<resources>
+
+    <!--<style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/DeepPurple</item>-->
+        <!--<item name="colorPrimaryDark">@color/DeepPurple900</item>-->
+        <!--<item name="colorAccent">@color/Orange</item>-->
+    <!--</style>-->
+
+    <!--<style name="AppTheme" parent="AppTheme.Base"></style>-->
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- Customize your theme here. -->
+        <!--<item name="android:actionBarStyle">@style/CustomActionBarStyle</item>-->
+    </style>
+
+    <style name="CustomActionBarStyle" parent="@android:style/Widget.Holo.ActionBar">
+
+        <!--&lt;!&ndash; Change action bar background color &ndash;&gt;-->
+        <!--<item name="android:actionMenuTextColor">@android:color/white</item>-->
+        <!--&lt;!&ndash; Change split action bar background color &ndash;&gt;-->
+        <!--<item name="android:backgroundSplit">@color/skyblue</item>-->
+        <item name="android:titleTextStyle">@style/CustomTitleTextStyle</item>
+        <item name="android:background">@color/sph_background</item>
+    </style>
+
+    <style name="CustomTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+
+        <!-- Change action bar title color -->
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="one_line">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="one_line_material">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="textview_header_normal">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="normal_edittext">
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">fill</item>
+    </style>
+    <style name="number_edittext">
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:numeric">signed|decimal</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_gravity">fill</item>
+    </style>
+</resources>
