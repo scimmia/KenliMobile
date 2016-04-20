@@ -6,8 +6,12 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import butterknife.Bind;
 import com.jiayusoft.mobile.kenli.R;
+import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.widget.JiayuSpinner;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONException;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
 
 public class ChaxunActivity extends BaseActivity {
 //    @Bind(R.id.sp_quxian)
@@ -63,7 +67,23 @@ public class ChaxunActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        String sampleXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                + "<mobilegate>"
+                +"<timestamp>232423423423</timestamp>"
+                + "<txn>" + "Transaction" + "</txn>"
+                + "<amt>" + 0 + "</amt>"
+                + "</mobilegate>";
+        JSONObject jsonObj = null;
+        try {
+            jsonObj = XML.toJSONObject(sampleXml);
+        } catch (JSONException e) {
+            DebugLog.e("JSON exception"+ e.getMessage());
+            e.printStackTrace();
+        }
 
+        DebugLog.d("XML   "+ sampleXml);
+
+        DebugLog.d("JSON   "+jsonObj.toString());
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Bundle bundle = new Bundle();
