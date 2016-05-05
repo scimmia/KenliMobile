@@ -5,15 +5,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import butterknife.Bind;
+import com.google.gson.Gson;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.widget.JiayuSpinner;
+import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
 import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONException;
 import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
 import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import java.util.LinkedList;
 
 public class ChaxunActivity extends BaseActivity {
 //    @Bind(R.id.sp_quxian)
@@ -119,20 +124,24 @@ public class ChaxunActivity extends BaseActivity {
 //
 //            }
 //        });
-
-        showSingleDialog("选择区县", GlobalData.hunyinzhuangkuangNames,
-                GlobalData.hunyinzhuangkuangIDs, GlobalData.hunyinzhuangkuangIDs[3], new DialogListener() {
-            @Override
-            public void onSelected(String name, String id) {
-                DebugLog.e(name + id);
-
-            }
-
-            @Override
-            public void onClear() {
-                DebugLog.e("onClear");
-
-            }
-        });
+///////////////////////////////////////////////////////////////
+//        showSingleDialog("选择区县", GlobalData.hunyinzhuangkuangNames,
+//                GlobalData.hunyinzhuangkuangIDs, GlobalData.hunyinzhuangkuangIDs[3], new DialogListener() {
+//            @Override
+//            public void onSelected(String name, String id) {
+//                DebugLog.e(name + id);
+//
+//            }
+//
+//            @Override
+//            public void onClear() {
+//                DebugLog.e("onClear");
+//
+//            }
+//        });
+///////////////////////////////////////////////////////////////
+        DBHelper dbHelper = new DBHelper(ChaxunActivity.this);
+        LinkedList<MutablePair<String,String>> m = dbHelper.getAddress("370521");
+        DebugLog.e(new Gson().toJson(m));
     }
 }
