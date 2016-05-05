@@ -1,20 +1,23 @@
 package com.jiayusoft.mobile.kenli.utils.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import butterknife.ButterKnife;
+import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
+import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.eventbus.BusProvider;
 import com.jiayusoft.mobile.kenli.utils.eventbus.event.MessageEvent;
 import com.squareup.otto.Subscribe;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * Created by ASUS on 2014/11/14.
@@ -165,5 +168,127 @@ public abstract class BaseActivity extends Activity implements GlobalData {
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         startActivity(intent);
+    }
+
+    Context getActivity(){
+        return BaseActivity.this;
+    }
+    public AlertDialog mAlertDialog;
+    public void showSingleDialog(String title,String[] itemNames,String[] itemIDs,String itemSelected,DialogListener dialogListener){
+        if (mAlertDialog != null){
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
+        }
+//        String[] itemNames = getResource(itemTpye);
+//        String[] itemIDs = getResource(itemTpye);
+        if (itemNames != null && itemIDs != null && itemNames.length == itemIDs.length){
+            int selectedPos = ArrayUtils.indexOf(itemNames,itemSelected);
+            mAlertDialog = new AlertDialog.Builder(BaseActivity.this).setTitle(title)
+                    .setSingleChoiceItems(itemNames, selectedPos, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialogListener != null){
+                                dialogListener.onSelected(itemNames[which],itemIDs[which]);
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("取消选择", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialogListener != null){
+                                dialogListener.onClear();
+                            }
+                        }
+                    })
+                    .setNeutralButton("返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            mAlertDialog.show();
+        }
+    }
+
+    public void showMutilDialog(int itemTpye,String title,String[] itemNames,String[] itemIDs,String itemSelected,DialogListener dialogListener){
+        if (mAlertDialog != null){
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
+        }
+        if (itemNames != null && itemIDs != null && itemNames.length == itemIDs.length){
+            boolean[] tempResult = new boolean[itemIDs.length];
+
+            int selectedPos = ArrayUtils.indexOf(itemNames,itemSelected);
+            mAlertDialog = new AlertDialog.Builder(BaseActivity.this).setTitle(title)
+                    .setSingleChoiceItems(itemNames, selectedPos, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialogListener != null){
+                                dialogListener.onSelected(itemNames[which],itemIDs[which]);
+                            }
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("取消选择", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dialogListener != null){
+                                dialogListener.onClear();
+                            }
+                        }
+                    })
+                    .setNeutralButton("返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+            mAlertDialog.show();
+        }
+    }
+
+    public void showDateDialog(String itemSelected,DialogListener dialogListener){
+        if (mAlertDialog != null){
+            mAlertDialog.dismiss();
+            mAlertDialog = null;
+        }
+        RelativeLayout relativeLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.dialog_pick_time,null);
+        DatePicker datePicker = (DatePicker) relativeLayout.findViewById(R.id.datePickerBegin);
+        if (NumberUtils.isNumber(itemSelected)){
+            long timeTemp = NumberUtils.toLong(itemSelected);
+            if (timeTemp > 0){
+                datePicker.getCalendarView().setDate(timeTemp);
+            }
+        }
+        mAlertDialog = new AlertDialog.Builder(getActivity()).setTitle("选择日期")
+                .setView(relativeLayout)
+                .setNegativeButton("取消", null)
+                .setNeutralButton("清空", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (dialogListener != null){
+                            dialogListener.onClear();
+                        }
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (dialogListener != null){
+                            long datetemp = 0;
+                            try {
+                                datetemp = datePicker.getCalendarView().getDate();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            dialogListener.onSelected(DateFormatUtils.ISO_DATE_FORMAT.format(datetemp),""+datetemp);
+                        }
+                    }
+                })
+                .create();
+        mAlertDialog.show();
     }
 }

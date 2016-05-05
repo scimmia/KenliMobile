@@ -109,4 +109,23 @@ public interface GlobalData {
 
     public static final String WS_Property_Binding = "Request";
     public static final String WS_Property_Save = "Request";
+
+    String[] shifouNames = { "是",  "否",  };
+    String[] shifouIDs = { "1",  "2",  };
+
+    String[] hunyinzhuangkuangNames = { "未婚",  "已婚",  "初婚",  "再婚",  "复婚",  "丧偶",  "离婚",  "其他",  };
+    String[] hunyinzhuangkuangIDs = { "10",  "20",  "21",  "22",  "23",  "30",  "40",  "90",  };
+
+    String[] biyuncuoshiNames = { "口服避孕药",  "注射避孕针",  "皮下埋植避孕剂",  "阴道环",  "外用避孕药—杀精剂",  "屏障避孕器具",  "宫内节育器",  "绝育术",  "女性绝育术",  "男性绝育术",  "其他避孕方法",  "自然避孕法",  "未避孕原因",  "待孕",  "现孕",  "绝经（包括子宫切除）",  "子宫切除",  "其他未避孕原因",  "有病不宜",  "产后一月",  "不孕症",  "离婚、丧偶",  "外出躲藏",  "情况不明",  "取出皮下埋植避孕剂",  "女性绝育复通术",  "男性绝育复通术",  "12周以内人工流产",  "12周以上人工流产",  "脱环",  };
+    String[] biyuncuoshiIDs = { "100",  "200",  "300",  "400",  "500",  "600",  "700",  "800",  "810",  "820",  "900",  "910",  "A00",  "A10",  "A20",  "A30",  "A31",  "A90",  "A91",  "A92",  "A93",  "A94",  "A95",  "A96",  "B10",  "D10",  "D20",  "E10",  "E20",  "F10",  };
+
+    String[] fangshijiluNames = { "第1次",  "第2次",  "第3次",  "第4次",  "第5次",  "第6次",  "第7次",  "第8次",  "第9次",  };
+    String[] fangshijiluIDs = { "1",  "2",  "3",  "4",  "5",  "6",  "7",  "8",  "9",  };
+
+    String[] shengyuqingkuangNames = { "已生育",  "未生育",  };
+    String[] shengyuqingkuangIDs = { "1",  "2",  };
+
+    String[] haiciNames = { "一男孩",  "一女孩",  "一男一女",  "两男孩",  "两女孩",  };
+    String[] haiciIDs = { "1",  "2",  "3",  "4",  "5",  };
+
 }

@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="json-20160212">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/json-20160212.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/ksoap2-android-assembly-3.6.0-jar-with-dependencies.jar!/" />
     </CLASSES>
     <JAVADOC />
