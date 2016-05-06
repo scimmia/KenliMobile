@@ -69,5 +69,6 @@
     <style name="select_edittext">
         <item name="android:editable">false</item>
         <item name="android:layout_gravity">fill</item>
+        <item name="android:tag">""</item>
     </style>
 </resources>

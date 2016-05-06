@@ -15,6 +15,13 @@ import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
 import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
+import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceListener;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONException;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
+import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -86,7 +93,7 @@ public class ChaxunActivity extends BaseActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
+        int id = item.getItemId();
 //        String sampleXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 //                + "<mobilegate>"
 //                +"<timestamp>232423423423</timestamp>"
@@ -105,34 +112,72 @@ public class ChaxunActivity extends BaseActivity {
 //
 //        DebugLog.d("JSON   "+jsonObj.toString());
 //        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            Bundle bundle = new Bundle();
-//            bundle.putString(XMLBody,
-//                    "<xiancode>370521</xiancode>\n" +
-//                            "<jdcode>370521001</jdcode>\n" +
-//                            "<jwhcode>370521001001</jwhcode>\n" +
-//                            "<xm></xm>\n" +
-//                            "<sfzh></sfzh>\n" +
-//                            "<flag>0</flag>\n" +
-//                            "<sfrq></sfrq>");
-//            beginActivity(ChaxunResultActivity.class, bundle);
-//            return true;
-//        }
+        if (id == R.id.action_settings) {
+            searchChaXun();
+
+            return true;
+        }
 
 
-        test();
         return super.onOptionsItemSelected(item);
     }
 
     void test(){
 
-///////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////
-        DBHelper dbHelper = new DBHelper(ChaxunActivity.this);
-        LinkedList<MutablePair<String,String>> m = dbHelper.getAddress("3705");
-        DebugLog.e(new Gson().toJson(m));
     }
+
+    void searchChaXun(){
+        SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
+        soapRequestStruct.setServiceNameSpace(WS_NameSpace);
+        soapRequestStruct.setServiceUrl(SERVICE_URL);
+        soapRequestStruct.setMethodName(WS_Method_getYlfninfo);
+        String content =
+                WebServiceUtil.buildItem("xiancode", (String) spQuxian.getTag())+
+                WebServiceUtil.buildItem("jdcode", (String) spJiedao.getTag())+
+                WebServiceUtil.buildItem("jwhcode", (String) spShequ.getTag())+
+                WebServiceUtil.buildItem("xm", String.valueOf(etXingming.getText()))+
+                WebServiceUtil.buildItem("sfzh", String.valueOf(etShenfenzheng.getText()))+
+                WebServiceUtil.buildItem("flag", (String) spShifousuifang.getTag())+
+                WebServiceUtil.buildItem("sfrq", String.valueOf(etSuifangjiandingshijian.getText()));
+
+        String xmlString =
+                WebServiceUtil.buildXml("getYlfninfo", content);
+        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
+        DebugLog.e("WS_Property_Binding: " + xmlString);
+
+        new WebServiceTask(ChaxunActivity.this, "查询中...",soapRequestStruct, chaXunListener).execute();
+
+    }
+
+    WebServiceListener chaXunListener = new WebServiceListener() {
+        @Override
+        public void onSuccess(String content) {
+            JSONObject jsonObj = null;
+            try {
+                jsonObj = XML.toJSONObject(content);
+                Bundle bundle = new Bundle();
+                bundle.putString(JsonBody,jsonObj.toString());
+                beginActivity(ChaxunResultActivity.class, bundle);
+            } catch (Exception e) {
+                DebugLog.e("JSON exception"+ e.getMessage());
+                e.printStackTrace();
+            }
+
+            DebugLog.d("XML   "+ content);
+
+            DebugLog.d("JSON   "+jsonObj.toString());
+        }
+
+        @Override
+        public void onFailure(String content) {
+            showToast("查询失败，请稍后重试");
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            showToast("网络异常，请稍后重试");
+        }
+    };
 
     String[] addressNames;
     String[] addressIDs;

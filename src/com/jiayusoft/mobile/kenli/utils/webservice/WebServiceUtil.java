@@ -2,6 +2,7 @@ package com.jiayusoft.mobile.kenli.utils.webservice;
 
 import android.util.Log;
 import android.util.Xml;
+import org.apache.commons.lang3.StringUtils;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.MarshalBase64;
 import org.ksoap2.serialization.SoapObject;
@@ -29,6 +30,13 @@ public class WebServiceUtil {
                 .append(message)
                 .append("</request></root>");
         return stringBuilder.toString();
+    }
+    public static String buildItem(String title, String message){
+        String tempMessage = message;
+        if (StringUtils.isEmpty(tempMessage)){
+            tempMessage = "";
+        }
+        return "<"+title+">"+message+"</"+title+">";
     }
     public static String connectToWebService(String SERVICE_NS, String SERVICE_URL, String methodName, String xmlString) throws IOException, XmlPullParserException {
 //        String SERVICE_NS = Init.SERVICE_NS;

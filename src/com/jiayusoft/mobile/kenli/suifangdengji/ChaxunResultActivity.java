@@ -1,37 +1,64 @@
 package com.jiayusoft.mobile.kenli.suifangdengji;
 
 //import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import butterknife.Bind;
+import butterknife.ButterKnife;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
-import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.LinkedList;
 
 public class ChaxunResultActivity extends BaseActivity {
 
-//    @Bind(R.id.list_result)
-//    RecyclerView mRvItems;
+    ItemAdapter mItemAdapter;
+    private LinkedList<ChaXunResult.RootBean.ResponseBean.RowBean> mResults;
+
+    @Bind(R.id.list_result)
+    ListView mRvItems;
     @Bind(android.R.id.empty)
     TextView empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            String xmlBody = bundle.getString(XMLBody, "");
-            if (StringUtils.isNotEmpty(xmlBody)) {
-                searchSuifang(xmlBody);
+        mResults = new LinkedList<>();
+        try {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                String jsonBody = bundle.getString(JsonBody, "");
+                if (StringUtils.isNotEmpty(jsonBody)) {
+                    ChaXunResult chaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
+                    mResults.clear();
+                    mResults.addAll(chaXunResult.getRoot().getResponse().getRow());
+                }
             }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
         }
+
+        mItemAdapter = new ItemAdapter();
+        mRvItems.setEmptyView(empty);
+        mRvItems.setAdapter(mItemAdapter);
+        mRvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DebugLog.e(new Gson().toJson(mResults.get(position)));
+            }
+        });
     }
 
     @Override
@@ -39,20 +66,51 @@ public class ChaxunResultActivity extends BaseActivity {
         setContentView(R.layout.activity_suifangchaxun_result);
     }
 
-    void searchSuifang(String xmlBody){
-        String xmlString = WebServiceUtil.buildXml(xmlBody);
+    class ItemAdapter extends BaseAdapter {
+        @Override
+        public int getCount() {
+            return mResults.size();
+        }
 
-        SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
-        soapRequestStruct.setServiceNameSpace(WS_NameSpace);
-//        soapRequestStruct.setMethodName(WS_Method_getXianinfo);
-//        soapRequestStruct.setMethodName(WS_Method_getJdinfo);
-        soapRequestStruct.setMethodName(WS_Method_getYlfninfo);
-        soapRequestStruct.setServiceUrl(SERVICE_URL);
-//            soapRequestStruct.setServiceUrl("http://58.56.20.118:9090/oa/ws/ImpData");
-        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
-        DebugLog.e("WS_Property_Binding: " + xmlString);
+        @Override
+        public Object getItem(int position) {
+            return mResults.get(position);
+        }
 
-        new WebServiceTask(ChaxunResultActivity.this, "查询中...",soapRequestStruct, null).execute();
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
+        @Override
+        public View getView(int position, View view, ViewGroup parent) {
+            ViewHolder holder;
+            if (view != null) {
+                holder = (ViewHolder) view.getTag();
+            } else {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dengjichaxun_item, parent, false);
+                holder = new ViewHolder(view);
+                view.setTag(holder);
+            }
+
+            holder.name.setText(mResults.get(position).getFemaleName());
+            holder.cardid.setText(mResults.get(position).getFemaleCardid());
+            holder.child.setText("现有男孩数：" + mResults.get(position).getBoyAmount() +
+                            "\t现有女孩数：" + mResults.get(position).getGirlAmount());
+            return view;
+        }
+
+        class ViewHolder {
+            @Bind(R.id.name)
+            TextView name;
+            @Bind(R.id.cardid)
+            TextView cardid;
+            @Bind(R.id.child)
+            TextView child;
+
+            ViewHolder(View view) {
+                ButterKnife.bind(this, view);
+            }
+        }
     }
 }

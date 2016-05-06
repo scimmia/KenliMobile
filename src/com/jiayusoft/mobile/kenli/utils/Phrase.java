@@ -1,4 +1,4 @@
-package com.jiayusoft.mobile.kenli.utils;
+package com.hisense.hicloud.edca.util;
 
 /*
  * Copyright (C) 2013 Square, Inc.
@@ -125,7 +125,7 @@ public final class Phrase {
             throw new IllegalArgumentException("Invalid key: " + key);
         }
         if (value == null) {
-            throw new IllegalArgumentException("Null value for '" + key + "'");
+            value = "";
         }
         keysToValues.put(key, value);
 
@@ -170,7 +170,10 @@ public final class Phrase {
             if (!keysToValues.keySet().containsAll(keys)) {
                 Set<String> missingKeys = new HashSet<String>(keys);
                 missingKeys.removeAll(keysToValues.keySet());
-                throw new IllegalArgumentException("Missing keys: " + missingKeys);
+                for (String missingKey : missingKeys){
+                    keysToValues.put(missingKey,"");
+                }
+//                throw new IllegalArgumentException("Missing keys: " + missingKeys);
             }
 
             // Copy the original pattern to preserve all spans, such as bold, italic, etc.
@@ -220,7 +223,7 @@ public final class Phrase {
             char nextChar = lookahead();
             if (nextChar == '{') {
                 return leftCurlyBracket(prev);
-            } else if (nextChar >= 'a' && nextChar <= 'z') {
+            } else if ((nextChar >= 'a' && nextChar <= 'z') || (nextChar >= 'A' && nextChar <= 'Z')) {
                 return key(prev);
             } else {
                 throw new IllegalArgumentException(
@@ -238,7 +241,7 @@ public final class Phrase {
 
         // Consume the opening '{'.
         consume();
-        while ((curChar >= 'a' && curChar <= 'z') || curChar == '_') {
+        while ((curChar >= 'a' && curChar <= 'z') || curChar == '_' || (curChar >= 'A' && curChar <= 'Z')) {
             sb.append(curChar);
             consume();
         }

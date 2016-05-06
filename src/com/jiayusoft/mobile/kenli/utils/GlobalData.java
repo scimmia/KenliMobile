@@ -24,6 +24,7 @@ public interface GlobalData {
     public static final int dbCurrentVersion = 1;
 
     public static final String XMLBody = "XMLBody";
+    public static final String JsonBody = "JsonBody";
     public static final String LOGIN_PASSWORD = "LOGIN_PASSWORD";
     public static final String LOGIN_SAVE_PASSWORD = "LOGIN_SAVE_PASSWORD";
     public static final String loginAutoLogin = "loginAutoLogin";
@@ -111,7 +112,7 @@ public interface GlobalData {
     public static final String WS_Property_Save = "Request";
 
     String[] shifouNames = { "是",  "否",  };
-    String[] shifouIDs = { "1",  "2",  };
+    String[] shifouIDs = { "1",  "0",  };
 
     String[] hunyinzhuangkuangNames = { "未婚",  "已婚",  "初婚",  "再婚",  "复婚",  "丧偶",  "离婚",  "其他",  };
     String[] hunyinzhuangkuangIDs = { "10",  "20",  "21",  "22",  "23",  "30",  "40",  "90",  };
