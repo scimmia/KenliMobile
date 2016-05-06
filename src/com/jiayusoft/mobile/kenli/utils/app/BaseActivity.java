@@ -182,7 +182,7 @@ public abstract class BaseActivity extends Activity implements GlobalData {
 //        String[] itemNames = getResource(itemTpye);
 //        String[] itemIDs = getResource(itemTpye);
         if (itemNames != null && itemIDs != null && itemNames.length == itemIDs.length){
-            int selectedPos = ArrayUtils.indexOf(itemNames,itemSelected);
+            int selectedPos = ArrayUtils.indexOf(itemIDs,itemSelected);
             mAlertDialog = new AlertDialog.Builder(BaseActivity.this).setTitle(title)
                     .setSingleChoiceItems(itemNames, selectedPos, new DialogInterface.OnClickListener() {
                         @Override
@@ -250,15 +250,15 @@ public abstract class BaseActivity extends Activity implements GlobalData {
         }
     }
 
-    public void showDateDialog(String itemSelected,DialogListener dialogListener){
+    public void showDateDialog(String dateSelected,DialogListener dialogListener){
         if (mAlertDialog != null){
             mAlertDialog.dismiss();
             mAlertDialog = null;
         }
         RelativeLayout relativeLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.dialog_pick_time,null);
         DatePicker datePicker = (DatePicker) relativeLayout.findViewById(R.id.datePickerBegin);
-        if (NumberUtils.isNumber(itemSelected)){
-            long timeTemp = NumberUtils.toLong(itemSelected);
+        if (NumberUtils.isNumber(dateSelected)){
+            long timeTemp = NumberUtils.toLong(dateSelected);
             if (timeTemp > 0){
                 datePicker.getCalendarView().setDate(timeTemp);
             }

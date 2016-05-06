@@ -5,17 +5,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import com.google.gson.Gson;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
-import com.jiayusoft.mobile.kenli.utils.app.widget.JiayuSpinner;
+import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
 import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONException;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.LinkedList;
@@ -37,23 +37,36 @@ public class ChaxunActivity extends BaseActivity {
 //    MaterialEditText etSuifangjiandingshijian;
 
     @Bind(R.id.sp_quxian)
-    JiayuSpinner spQuxian;
+    EditText spQuxian;
     @Bind(R.id.sp_jiedao)
-    JiayuSpinner spJiedao;
+    EditText spJiedao;
     @Bind(R.id.sp_shequ)
-    JiayuSpinner spShequ;
+    EditText spShequ;
     @Bind(R.id.et_xingming)
     EditText etXingming;
     @Bind(R.id.et_shenfenzheng)
     EditText etShenfenzheng;
     @Bind(R.id.sp_shifousuifang)
-    JiayuSpinner spShifousuifang;
+    EditText spShifousuifang;
     @Bind(R.id.et_suifangjiandingshijian)
     EditText etSuifangjiandingshijian;
 
+    DBHelper mDBHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDBHelper = new DBHelper(ChaxunActivity.this);
+        findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(ChaxunActivity.this));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try{
+            mDBHelper.close();
+        }catch (Exception e){
+            DebugLog.e(e.getMessage());
+        }
     }
 
     @Override
@@ -112,36 +125,194 @@ public class ChaxunActivity extends BaseActivity {
     }
 
     void test(){
-//        showDateDialog(null, new DialogListener() {
-//            @Override
-//            public void onSelected(String name, String id) {
-//                DebugLog.e(name + id);
-//            }
-//
-//            @Override
-//            public void onClear() {
-//                DebugLog.e("onClear");
-//
-//            }
-//        });
+
 ///////////////////////////////////////////////////////////////
-//        showSingleDialog("选择区县", GlobalData.hunyinzhuangkuangNames,
-//                GlobalData.hunyinzhuangkuangIDs, GlobalData.hunyinzhuangkuangIDs[3], new DialogListener() {
-//            @Override
-//            public void onSelected(String name, String id) {
-//                DebugLog.e(name + id);
-//
-//            }
-//
-//            @Override
-//            public void onClear() {
-//                DebugLog.e("onClear");
-//
-//            }
-//        });
+
 ///////////////////////////////////////////////////////////////
         DBHelper dbHelper = new DBHelper(ChaxunActivity.this);
-        LinkedList<MutablePair<String,String>> m = dbHelper.getAddress("370521");
+        LinkedList<MutablePair<String,String>> m = dbHelper.getAddress("3705");
         DebugLog.e(new Gson().toJson(m));
     }
+
+    String[] addressNames;
+    String[] addressIDs;
+    @OnFocusChange(R.id.sp_quxian)
+    void onsp_quxianFocus(boolean focused) {
+        if (focused) {
+            onsp_quxian();
+        }
+    }
+
+    @OnClick(R.id.sp_quxian)
+    void onsp_quxian() {
+        DebugLog.e("onsp_quxian");
+        LinkedList<MutablePair<String,String>> m = mDBHelper.getAddress("3705");
+        addressNames = new String[m.size()];
+        addressIDs = new String[m.size()];
+        for (int i=0;i<m.size();i++){
+            addressNames[i] = m.get(i).getLeft();
+            addressIDs[i] = m.get(i).getRight();
+        }
+        showSingleDialog("", addressNames,
+                addressIDs, (String) spQuxian.getTag(), new DialogListener() {
+                    @Override
+                    public void onSelected(String name, String id) {
+                        DebugLog.e(name +"\t"+ id);
+                        spQuxian.setTag(id);
+                        spQuxian.setText(name);
+                        spJiedao.setTag("");
+                        spJiedao.setText("");
+                        spShequ.setTag("");
+                        spShequ.setText("");
+                    }
+
+                    @Override
+                    public void onClear() {
+                        DebugLog.e("onClear");
+                        spQuxian.setTag("");
+                        spQuxian.setText("");
+                        spJiedao.setTag("");
+                        spJiedao.setText("");
+                        spShequ.setTag("");
+                        spShequ.setText("");
+                    }
+                });
+    }
+
+    @OnFocusChange(R.id.sp_jiedao)
+    void onsp_jiedaoFocus(boolean focused) {
+        if (focused) {
+            onsp_jiedao();
+        }
+    }
+
+    @OnClick(R.id.sp_jiedao)
+    void onsp_jiedao() {
+        DebugLog.e("onsp_jiedao");
+        if (StringUtils.isEmpty((String) spQuxian.getTag())){
+            showToast("请先选择区县");
+            return;
+        }
+        LinkedList<MutablePair<String,String>> m = mDBHelper.getAddress((String) spQuxian.getTag());
+        addressNames = new String[m.size()];
+        addressIDs = new String[m.size()];
+        for (int i=0;i<m.size();i++){
+            addressNames[i] = m.get(i).getLeft();
+            addressIDs[i] = m.get(i).getRight();
+        }
+        showSingleDialog("", addressNames,
+                addressIDs, (String) spJiedao.getTag(), new DialogListener() {
+                    @Override
+                    public void onSelected(String name, String id) {
+                        DebugLog.e(name +"\t"+ id);
+                        spJiedao.setTag(id);
+                        spJiedao.setText(name);
+                        spShequ.setTag("");
+                        spShequ.setText("");
+                    }
+
+                    @Override
+                    public void onClear() {
+                        DebugLog.e("onClear");
+                        spJiedao.setTag("");
+                        spJiedao.setText("");
+                        spShequ.setTag("");
+                        spShequ.setText("");
+                    }
+                });
+    }
+
+    @OnFocusChange(R.id.sp_shequ)
+    void onsp_shequFocus(boolean focused) {
+        if (focused) {
+            onsp_shequ();
+        }
+    }
+
+    @OnClick(R.id.sp_shequ)
+    void onsp_shequ() {
+        DebugLog.e("onsp_shequ");
+        if (StringUtils.isEmpty((String) spJiedao.getTag())){
+            showToast("请先选择街道(乡镇)");
+            return;
+        }
+        LinkedList<MutablePair<String,String>> m = mDBHelper.getAddress((String) spJiedao.getTag());
+        addressNames = new String[m.size()];
+        addressIDs = new String[m.size()];
+        for (int i=0;i<m.size();i++){
+            addressNames[i] = m.get(i).getLeft();
+            addressIDs[i] = m.get(i).getRight();
+        }
+        showSingleDialog("", addressNames,
+                addressIDs, (String) spJiedao.getTag(), new DialogListener() {
+                    @Override
+                    public void onSelected(String name, String id) {
+                        DebugLog.e(name +"\t"+ id);
+                        spShequ.setTag(id);
+                        spShequ.setText(name);
+                    }
+
+                    @Override
+                    public void onClear() {
+                        DebugLog.e("onClear");
+                        spShequ.setTag("");
+                        spShequ.setText("");
+                    }
+                });
+    }
+    @OnFocusChange(R.id.sp_shifousuifang)
+    void onsp_shifousuifangFocus(boolean focused) {
+        if (focused) {
+            onsp_shifousuifang();
+        }
+    }
+
+    @OnClick(R.id.sp_shifousuifang)
+    void onsp_shifousuifang() {
+        DebugLog.e("onsp_shifousuifang");
+        showSingleDialog("", GlobalData.shifouNames,
+                GlobalData.shifouIDs, (String) spShifousuifang.getTag(), new DialogListener() {
+                    @Override
+                    public void onSelected(String name, String id) {
+                        DebugLog.e(name +"\t"+ id);
+                        spShifousuifang.setTag(id);
+                        spShifousuifang.setText(name);
+                    }
+
+                    @Override
+                    public void onClear() {
+                        DebugLog.e("onClear");
+                        spShifousuifang.setTag("");
+                        spShifousuifang.setText("");
+                    }
+                });
+    }
+
+    @OnFocusChange(R.id.et_suifangjiandingshijian)
+    void onet_suifangjiandingshijianFocus(boolean focused) {
+        if (focused) {
+            onet_suifangjiandingshijian();
+        }
+    }
+
+    @OnClick(R.id.et_suifangjiandingshijian)
+    void onet_suifangjiandingshijian() {
+        DebugLog.e("onet_suifangjiandingshijian");
+        showDateDialog((String) etSuifangjiandingshijian.getTag(), new DialogListener() {
+            @Override
+            public void onSelected(String name, String id) {
+                DebugLog.e(name +"\t"+ id);
+                etSuifangjiandingshijian.setTag(id);
+                etSuifangjiandingshijian.setText(name);
+            }
+
+            @Override
+            public void onClear() {
+                DebugLog.e("onClear");
+                etSuifangjiandingshijian.setTag("");
+                etSuifangjiandingshijian.setText("");
+            }
+        });
+    }
+
 }
