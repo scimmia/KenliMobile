@@ -58,22 +58,10 @@ public class ChaxunActivity extends BaseActivity {
     @Bind(R.id.et_suifangjiandingshijian)
     EditText etSuifangjiandingshijian;
 
-    DBHelper mDBHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDBHelper = new DBHelper(ChaxunActivity.this);
         findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(ChaxunActivity.this));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try{
-            mDBHelper.close();
-        }catch (Exception e){
-            DebugLog.e(e.getMessage());
-        }
     }
 
     @Override

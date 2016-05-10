@@ -30,6 +30,7 @@
     <string name="action_settings">设置</string>
     <string name="action_save">保存</string>
     <string name="search_menu">查询</string>
+    <string name="add_menu">新建</string>
     <string name="search_shenfenzheng">身份证</string>
     <string name="search_xingming">姓名</string>
     <string name="search_chuyuanriqi">出院日期</string>
@@ -72,4 +73,5 @@
     <string name="search_shequ">社区(村)</string>
     <string name="title_activity_chaxun">查询育龄妇女-筛选条件</string>
     <string name="title_activity_chaxun_result">选择育龄妇女</string>
+    <string name="title_activity_suifangjibenxinxi">基本信息</string>
 </resources>

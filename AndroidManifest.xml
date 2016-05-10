@@ -44,5 +44,8 @@
                 android:name=".suifangdengji.ChaxunResultActivity"
                 android:label="@string/title_activity_chaxun_result" >
         </activity>
+        <activity android:name=".suifangdengji.SuifangdengjiActivity"/>
+        <activity android:name=".suifangdengji.SuifangJibenxinxiActivity"
+                  android:label="@string/title_activity_suifangjibenxinxi" />
     </application>
 </manifest>

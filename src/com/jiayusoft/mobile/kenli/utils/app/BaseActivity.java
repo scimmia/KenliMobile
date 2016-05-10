@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.widget.*;
 import butterknife.ButterKnife;
 import com.jiayusoft.mobile.kenli.R;
+import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
+import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
 import com.jiayusoft.mobile.kenli.utils.eventbus.BusProvider;
 import com.jiayusoft.mobile.kenli.utils.eventbus.event.MessageEvent;
 import com.squareup.otto.Subscribe;
@@ -27,6 +29,7 @@ public abstract class BaseActivity extends Activity implements GlobalData {
     public Activity getBaseActivity(){
         return mBaseActivity;
     }
+    public DBHelper mDBHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public abstract class BaseActivity extends Activity implements GlobalData {
             }
         };
         BusProvider.getInstance().register(showMessageListener);
+        mDBHelper = new DBHelper(BaseActivity.this);
     }
 
     @Override
@@ -90,6 +94,11 @@ public abstract class BaseActivity extends Activity implements GlobalData {
         // Always unregister when an object no longer should be on the bus.
         BusProvider.getInstance().unregister(this);
         BusProvider.getInstance().unregister(showMessageListener);
+        try{
+            mDBHelper.close();
+        }catch (Exception e){
+            DebugLog.e(e.getMessage());
+        }
     }
 
 

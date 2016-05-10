@@ -4,9 +4,7 @@ package com.jiayusoft.mobile.kenli.suifangdengji;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -46,7 +44,7 @@ public class ChaxunResultActivity extends BaseActivity {
                     mResults.addAll(chaXunResult.getRoot().getResponse().getRow());
                 }
             }
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -56,7 +54,11 @@ public class ChaxunResultActivity extends BaseActivity {
         mRvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DebugLog.e(new Gson().toJson(mResults.get(position)));
+                String json = new Gson().toJson(mResults.get(position));
+                DebugLog.e(json);
+                Bundle bundle = new Bundle();
+                bundle.putString(JsonBody,json);
+                beginActivity(SuifangJibenxinxiActivity.class, bundle);
             }
         });
     }
@@ -116,4 +118,24 @@ public class ChaxunResultActivity extends BaseActivity {
 
     //05-10 13:43:31.545 520-520/com.jiayusoft.mobile.kenli E/ChaxunResultActivity.java: [onItemClick:59]{"boyAmount":"1","femaleBirthday":"","femaleCardid":"","femaleId":"370521000000002152","femaleMaritalStatus":"","femaleName":"","girlAmount":"0","maleBirthday":"1981-01-14","maleCardid":"370521198101143617","maleMaritalStatus":"10","maleName":"饶国强","maritalChangeDate":"","orgid":"370521104207","orgname":"一村村委会"}
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_chaxun_new, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            beginActivity(SuifangdengjiActivity.class);
+
+            return true;
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }

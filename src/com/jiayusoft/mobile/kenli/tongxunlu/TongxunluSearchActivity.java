@@ -35,24 +35,11 @@ public class TongxunluSearchActivity extends BaseActivity {
     @Bind(R.id.et_shenfenzheng)
     EditText etShenfenzheng;
 
-    DBHelper mDBHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDBHelper = new DBHelper(TongxunluSearchActivity.this);
         findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(TongxunluSearchActivity.this));
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        try{
-            mDBHelper.close();
-        }catch (Exception e){
-            DebugLog.e(e.getMessage());
-        }
     }
 
     @Override
