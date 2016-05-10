@@ -113,4 +113,7 @@ public class ChaxunResultActivity extends BaseActivity {
             }
         }
     }
+
+    //05-10 13:43:31.545 520-520/com.jiayusoft.mobile.kenli E/ChaxunResultActivity.java: [onItemClick:59]{"boyAmount":"1","femaleBirthday":"","femaleCardid":"","femaleId":"370521000000002152","femaleMaritalStatus":"","femaleName":"","girlAmount":"0","maleBirthday":"1981-01-14","maleCardid":"370521198101143617","maleMaritalStatus":"10","maleName":"饶国强","maritalChangeDate":"","orgid":"370521104207","orgname":"一村村委会"}
+
 }
