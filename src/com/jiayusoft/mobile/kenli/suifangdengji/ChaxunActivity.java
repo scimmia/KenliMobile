@@ -202,6 +202,9 @@ public class ChaxunActivity extends BaseActivity {
                 addressIDs, (String) spQuxian.getTag(), new DialogListener() {
                     @Override
                     public void onSelected(String name, String id) {
+                        if (StringUtils.equals(id, (CharSequence) spQuxian.getTag())){
+                            return;
+                        }
                         DebugLog.e(name +"\t"+ id);
                         spQuxian.setTag(id);
                         spQuxian.setText(name);
@@ -250,6 +253,9 @@ public class ChaxunActivity extends BaseActivity {
                     @Override
                     public void onSelected(String name, String id) {
                         DebugLog.e(name +"\t"+ id);
+                        if (StringUtils.equals(id, (CharSequence) spJiedao.getTag())){
+                            return;
+                        }
                         spJiedao.setTag(id);
                         spJiedao.setText(name);
                         spShequ.setTag("");
@@ -293,6 +299,10 @@ public class ChaxunActivity extends BaseActivity {
                     @Override
                     public void onSelected(String name, String id) {
                         DebugLog.e(name +"\t"+ id);
+                        DebugLog.e(name +"\t"+ id);
+                        if (StringUtils.equals(id, (CharSequence) spShequ.getTag())){
+                            return;
+                        }
                         spShequ.setTag(id);
                         spShequ.setText(name);
                     }
