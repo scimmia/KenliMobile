@@ -113,7 +113,7 @@ public class SuifangJibenxinxiActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            beginActivity(SuifangdengjiActivity.class);
+            beginActivity(SuifangUploadActivity.class);
 
             return true;
         }

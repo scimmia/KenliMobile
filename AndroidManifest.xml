@@ -49,5 +49,6 @@
         <activity android:name=".suifangdengji.SuifangdengjiActivity"/>
         <activity android:name=".suifangdengji.SuifangJibenxinxiActivity"
                   android:label="@string/title_activity_suifangjibenxinxi" />
+        <activity android:name=".suifangdengji.SuifangUploadActivity" />
     </application>
 </manifest>
