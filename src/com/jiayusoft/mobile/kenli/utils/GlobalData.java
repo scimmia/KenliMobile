@@ -25,6 +25,7 @@ public interface GlobalData {
 
     public static final String XMLBody = "XMLBody";
     public static final String JsonBody = "JsonBody";
+    public static final String LOGIN_USER_NAME = "LOGIN_USER_NAME";
     public static final String LOGIN_PASSWORD = "LOGIN_PASSWORD";
     public static final String LOGIN_SAVE_PASSWORD = "LOGIN_SAVE_PASSWORD";
     public static final String loginAutoLogin = "loginAutoLogin";

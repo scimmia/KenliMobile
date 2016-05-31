@@ -1,0 +1,85 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+    <RelativeLayout
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:columnCount="1">
+            <TextView
+                android:text="@string/prompt_account"
+                style="@style/textview_header_normal"/>
+            <EditText
+                android:id="@+id/login_et_username"
+                style="@style/normal_edittext"
+                android:maxLines="1"
+                android:singleLine="true"
+                />
+            <TextView
+                android:text="@string/prompt_password"
+                style="@style/textview_header_normal"/>
+            <EditText
+                android:id="@+id/login_et_password"
+                style="@style/normal_edittext"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:text="@string/login_savepassword"
+                    android:id="@+id/login_cb_save_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:textSize="20sp"/>
+
+                <CheckBox
+                    android:text="@string/login_autologin"
+                    android:id="@+id/login_cb_auto_login"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:textSize="20sp"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/login_btn_sign"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in"
+                android:textStyle="bold"
+                android:textSize="20sp"/>
+        </GridLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
+
+
