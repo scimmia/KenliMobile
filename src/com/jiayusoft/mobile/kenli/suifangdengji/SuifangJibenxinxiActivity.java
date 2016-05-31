@@ -49,7 +49,7 @@ public class SuifangJibenxinxiActivity extends BaseActivity {
     @Bind(R.id.main_layout)
     LinearLayout mainLayout;
 
-    ChaXunResult.RootBean.ResponseBean.RowBean mChaXunResult;
+    ChaXunResult mChaXunResult;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class SuifangJibenxinxiActivity extends BaseActivity {
             if (bundle != null) {
                 String jsonBody = bundle.getString(JsonBody, "");
                 if (StringUtils.isNotEmpty(jsonBody)) {
-                    mChaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.RootBean.ResponseBean.RowBean.class);
+                    mChaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
                 }
             }
         } catch (Exception e) {

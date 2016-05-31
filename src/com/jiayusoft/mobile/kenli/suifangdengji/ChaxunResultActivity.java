@@ -4,6 +4,7 @@ package com.jiayusoft.mobile.kenli.suifangdengji;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Xml;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -17,13 +18,17 @@ import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import org.apache.commons.lang3.StringUtils;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.LinkedList;
 
 public class ChaxunResultActivity extends BaseActivity {
 
     ItemAdapter mItemAdapter;
-    private LinkedList<ChaXunResult.RootBean.ResponseBean.RowBean> mResults;
+    private LinkedList<ChaXunResult> mResults;
 
     @Bind(R.id.list_result)
     ListView mRvItems;
@@ -34,20 +39,6 @@ public class ChaxunResultActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mResults = new LinkedList<>();
-        try {
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-                String jsonBody = bundle.getString(JsonBody, "");
-                if (StringUtils.isNotEmpty(jsonBody)) {
-                    ChaXunResult chaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
-                    mResults.clear();
-                    mResults.addAll(chaXunResult.getRoot().getResponse().getRow());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         mItemAdapter = new ItemAdapter();
         mRvItems.setEmptyView(empty);
         mRvItems.setAdapter(mItemAdapter);
@@ -61,11 +52,96 @@ public class ChaxunResultActivity extends BaseActivity {
                 beginActivity(SuifangJibenxinxiActivity.class, bundle);
             }
         });
+        try {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                String jsonBody = bundle.getString(JsonBody, "");
+                initDatas(jsonBody);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void initContentView() {
         setContentView(R.layout.activity_suifangchaxun_result);
+    }
+
+    void initDatas(String content){
+        if (StringUtils.isEmpty(content)){
+            return;
+        }
+        LinkedList<ChaXunResult> rows = new LinkedList<>();
+        ChaXunResult row = null;
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setInput(new StringReader(content));
+            int event = parser.getEventType();
+            String currentTag;
+            while (event != XmlPullParser.END_DOCUMENT) {
+                switch (event) {
+                    case XmlPullParser.START_DOCUMENT:
+                        break;
+                    case XmlPullParser.START_TAG:
+                        currentTag = parser.getName();
+                        if (StringUtils.equalsIgnoreCase(currentTag,"row")){
+                            row = new ChaXunResult();
+                        } else if (row != null){
+                            if (StringUtils.equalsIgnoreCase(currentTag,"femaleId")){
+                                row.setFemaleId(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"femaleName")){
+                                row.setFemaleName(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"femaleCardid")){
+                                row.setFemaleCardid(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"femaleBirthday")){
+                                row.setFemaleBirthday(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"femaleMaritalStatus")){
+                                row.setFemaleMaritalStatus(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"maleName")){
+                                row.setMaleName(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"maleCardid")){
+                                row.setMaleCardid(parser.nextText());
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"maleBirthday")){
+                                row.setMaleBirthday(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"maleMaritalStatus")){
+                                row.setMaleMaritalStatus(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"maritalChangeDate")){
+                                row.setMaritalChangeDate(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"boyAmount")){
+                                row.setBoyAmount(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"girlAmount")){
+                                row.setGirlAmount(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"orgid")){
+                                row.setOrgid(parser.nextText());
+                            }else if (StringUtils.equalsIgnoreCase(currentTag,"orgname")){
+                                row.setOrgname(parser.nextText());
+                            }
+                        }
+                        break;
+                    case XmlPullParser.TEXT:
+                        break;
+                    case XmlPullParser.END_TAG:
+                        currentTag = parser.getName();
+                        if (StringUtils.equalsIgnoreCase(currentTag,"row")) {
+                            rows.add(row);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                event = parser.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (mResults == null){
+            mResults = new LinkedList<>();
+        }
+        mResults.addAll(rows);
+        mItemAdapter.notifyDataSetChanged();
     }
 
     class ItemAdapter extends BaseAdapter {

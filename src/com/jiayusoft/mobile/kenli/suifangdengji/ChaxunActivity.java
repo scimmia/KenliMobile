@@ -140,20 +140,15 @@ public class ChaxunActivity extends BaseActivity {
     WebServiceListener chaXunListener = new WebServiceListener() {
         @Override
         public void onSuccess(String content) {
-            JSONObject jsonObj = null;
             try {
-                jsonObj = XML.toJSONObject(content);
                 Bundle bundle = new Bundle();
-                bundle.putString(JsonBody,jsonObj.toString());
+                bundle.putString(JsonBody,content);
                 beginActivity(ChaxunResultActivity.class, bundle);
             } catch (Exception e) {
                 DebugLog.e("JSON exception"+ e.getMessage());
                 e.printStackTrace();
             }
-
             DebugLog.d("XML   "+ content);
-
-            DebugLog.d("JSON   "+jsonObj.toString());
         }
 
         @Override
