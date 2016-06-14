@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
             mLoginEtUsername.setError(null);
             mLoginEtPassword.setError(null);
 
-            login();
+            checkUpdate();
         }
     }
 
