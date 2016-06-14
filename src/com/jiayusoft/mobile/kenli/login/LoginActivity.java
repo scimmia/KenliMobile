@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -17,39 +18,26 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.jiayusoft.mobile.kenli.BaseApplication;
 import com.jiayusoft.mobile.kenli.MainActivity;
 import com.jiayusoft.mobile.kenli.R;
-import com.jiayusoft.mobile.kenli.suifangdengji.ChaxunResultActivity;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
-import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceListener;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
+import com.jiayusoft.mobile.kenli.utils.eventbus.event.HttpEvent;
+import com.jiayusoft.mobile.kenli.utils.webservice.*;
 import com.squareup.otto.Subscribe;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.math.NumberUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import butterknife.OnFocusChange;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 
 public class LoginActivity extends BaseActivity {
@@ -103,7 +91,7 @@ public class LoginActivity extends BaseActivity {
             mLoginEtUsername.setError(null);
             mLoginEtPassword.setError(null);
 
-            checkUpdate();
+            login();
         }
     }
 
@@ -114,70 +102,23 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-//    @Subscribe
-//    public void onHttpEvent(HttpEvent event) {
-//        if (event == null || StringUtils.isEmpty(event.getResponse())) {
-//            showMessage("网络连接错误，请稍后重试。");
-//        } else {
-//            int tag = event.getTag();
-//            switch (tag) {
-//                case tagLogin:
-//                    DebugLog.e(event.getResponse());
-//                    BaseResponse<UserDoctor> response = new Gson().fromJson(event.getResponse(), new TypeToken<BaseResponse<UserDoctor>>() {
-//                    }.getType());
-//                    switch (response.getErrorCode()) {
-//                        case 0:
-//                            BaseApplication.setCurrentUser(response.getData());
-//                            BaseApplication.getCurrentUser().setOrgName(mSuoshujigou.getText().toString());
-//                            startMainActivity();
-//                            break;
-//                        default:
-//                            String msg = response.getErrorMsg();
-//                            if (StringUtils.isEmpty(msg)) {
-//                                msg = "网络连接错误，请稍后重试。";
-//                            }
-//                            showMessage(msg);
-//                            break;
-//                    }
-//                    break;
-//                case tagCheckUpdate:
-//                    DebugLog.e(event.getResponse());
-//                    final BaseResponse<UpdateInfo> responseCheckUpdate = new Gson().fromJson(event.getResponse(), new TypeToken<BaseResponse<UpdateInfo>>() {
-//                    }.getType());
-//                    switch (responseCheckUpdate.getErrorCode()) {
-//                        case 0:
-//                            new AlertDialog.Builder(getBaseActivity())
-//                                    .setTitle("升级信息提示")
-//                                    .setMessage("发现新版本：" + responseCheckUpdate.getData().getVersionName()
-//                                            + "\n更新内容：" + responseCheckUpdate.getData().getUpdateLog())
-//                                    .setNegativeButton("现在升级", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            new HttpDownloadTask(
-//                                                    getBaseActivity(), "下载中...", tagDownloadNewFile,
-//                                                    responseCheckUpdate.getData().getSoftUrl(),
-//                                                    updateFolder + "EMR.apk").execute();
-//                                        }
-//                                    })
-//                                    .setPositiveButton("以后再说", null)
-//                                    .setCancelable(false)
-//                                    .show();
-//                            break;
-//                        default:
-//                            login();
-//                            break;
-//                    }
-//                    break;
-//                case tagDownloadNewFile:
-//                    if (StringUtils.isNotEmpty(event.getResponse())) {
-//                        Intent intent = new Intent(Intent.ACTION_VIEW);
-//                        intent.setDataAndType(Uri.fromFile(new File(event.getResponse())), "application/vnd.android.package-archive");
-//                        startActivity(intent);
-//                    }
-//                    break;
-//            }
-//        }
-//    }
+    @Subscribe
+    public void onHttpEvent(HttpEvent event) {
+        if (event == null || StringUtils.isEmpty(event.getResponse())) {
+            showMessage("网络连接错误，请稍后重试。");
+        } else {
+            int tag = event.getTag();
+            switch (tag) {
+                case tagDownloadNewFile:
+                    if (StringUtils.isNotEmpty(event.getResponse())) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(new File(event.getResponse())), "application/vnd.android.package-archive");
+                        startActivity(intent);
+                    }
+                    break;
+            }
+        }
+    }
 
     void startMainActivity() {
         DebugLog.e("startMainActivity");
@@ -193,10 +134,6 @@ public class LoginActivity extends BaseActivity {
         }
         spEd.putBoolean(loginAutoLogin, mLoginCbAutoLogin.isChecked());
         spEd.apply();
-//            BaseApplication.setCurrentCustomer(new Customer("王五","123","sdf","","",""));
-//            Intent intent = new Intent(getActivity(), MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-//            startActivity(intent);
         beginActivity(MainActivity.class);
         finish();
     }
@@ -235,10 +172,94 @@ public class LoginActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        formBody.put(versionCode, versionTemp);
-        formBody.put(softName, defaultSoftName);
-//        new HttpTask(getBaseActivity(), "检查更新...", httpPost, tagCheckUpdate, checkUpdateUrl, formBody).execute();
+
+        SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
+        soapRequestStruct.setServiceNameSpace(WS_NameSpace);
+        soapRequestStruct.setServiceUrl(SERVICE_URL);
+        soapRequestStruct.setMethodName(WS_Method_checkUpdate);
+        String content =
+                WebServiceUtil.buildItem(appname, defaultSoftName)+
+                        WebServiceUtil.buildItem(versionCode, versionTemp);
+
+        String xmlString =
+                WebServiceUtil.buildXml(content);
+        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
+        DebugLog.e("WS_Property_Binding: " + xmlString);
+
+        new WebServiceTask(LoginActivity.this, "检查更新...",soapRequestStruct, checkUpdateListener).execute();
     }
+    WebServiceListener checkUpdateListener = new WebServiceListener() {
+        @Override
+        public void onSuccess(String content) {
+            if (StringUtils.isEmpty(content)){
+                return;
+            }
+            String needupdate = "0";
+            String versionName = "";
+            String updateInfo = "";
+            String downloadURL = "";
+            try {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setInput(new StringReader(content));
+                int event = parser.getEventType();
+                String currentTag;
+                while (event != XmlPullParser.END_DOCUMENT) {
+                    switch (event) {
+                        case XmlPullParser.START_TAG:
+                            currentTag = parser.getName();
+                            if (StringUtils.equalsIgnoreCase(currentTag,"needupdate")){
+                                needupdate = parser.nextText();
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"versionname")){
+                                versionName = parser.nextText();
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"downloadurl")){
+                                downloadURL = parser.nextText();
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"updateinfo")){
+                                updateInfo = parser.nextText();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    event = parser.next();
+                }
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (StringUtils.equalsIgnoreCase(needupdate,"0")){
+                login();
+            } else if (StringUtils.equalsIgnoreCase(needupdate,"1")){
+                String finalDownloadURL = downloadURL;
+                new AlertDialog.Builder(getBaseActivity())
+                        .setTitle("升级信息提示")
+                        .setMessage("发现新版本：" + versionName
+                                + "\n更新内容：" + updateInfo)
+                        .setNegativeButton("现在升级", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new HttpDownloadTask(
+                                        getBaseActivity(), "下载中...", tagDownloadNewFile,
+                                        finalDownloadURL,
+                                        updateFolder + defaultSoftName+".apk").execute();
+                            }
+                        })
+                        .setPositiveButton("以后再说", null)
+                        .setCancelable(false)
+                        .show();
+            }
+        }
+
+        @Override
+        public void onFailure(String content) {
+            login();
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            login();
+        }
+    };
 
     void login() {
         String userName = mLoginEtUsername.getText().toString();
@@ -247,13 +268,13 @@ public class LoginActivity extends BaseActivity {
         SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
         soapRequestStruct.setServiceNameSpace(WS_NameSpace);
         soapRequestStruct.setServiceUrl(SERVICE_URL);
-        soapRequestStruct.setMethodName(WS_Method_getYlfninfo);//// TODO: 2016/5/31
+        soapRequestStruct.setMethodName(WS_Method_loginVerify);
         String content =
-                WebServiceUtil.buildItem("xiancode", userName)+
-                        WebServiceUtil.buildItem("jdcode", password);
+                WebServiceUtil.buildItem("usercode", userName)+
+                        WebServiceUtil.buildItem("password", password);
 
         String xmlString =
-                WebServiceUtil.buildXml("getYlfninfo", content);
+                WebServiceUtil.buildXml(content);
         soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
         DebugLog.e("WS_Property_Binding: " + xmlString);
 
@@ -264,42 +285,55 @@ public class LoginActivity extends BaseActivity {
     WebServiceListener loginListener = new WebServiceListener() {
         @Override
         public void onSuccess(String content) {
-            JSONObject jsonObj = null;
+            if (StringUtils.isEmpty(content)){
+                return;
+            }
+            String state = "";
+            String result = "";
             try {
-                jsonObj = XML.toJSONObject(content);
-                Bundle bundle = new Bundle();
-                bundle.putString(JsonBody,jsonObj.toString());
-                beginActivity(ChaxunResultActivity.class, bundle);
-            } catch (Exception e) {
-                DebugLog.e("JSON exception"+ e.getMessage());
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setInput(new StringReader(content));
+                int event = parser.getEventType();
+                String currentTag;
+                while (event != XmlPullParser.END_DOCUMENT) {
+                    switch (event) {
+                        case XmlPullParser.START_DOCUMENT:
+                            break;
+                        case XmlPullParser.START_TAG:
+                            currentTag = parser.getName();
+                            if (StringUtils.equalsIgnoreCase(currentTag,"state")){
+                                state = parser.nextText();
+                            } else if (StringUtils.equalsIgnoreCase(currentTag,"result")){
+                                result = parser.nextText();
+                            }
+                            break;
+                        case XmlPullParser.TEXT:
+                            break;
+                        case XmlPullParser.END_TAG:
+                            break;
+                        default:
+                            break;
+                    }
+                    event = parser.next();
+                }
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            DebugLog.d("XML   "+ content);
-            DebugLog.d("JSON   "+jsonObj.toString());
-
-//            DebugLog.e(event.getResponse());
-//            BaseResponse<UserDoctor> response = new Gson().fromJson(event.getResponse(), new TypeToken<BaseResponse<UserDoctor>>() {
-//            }.getType());
-//            switch (response.getErrorCode()) {
-//                case 0:
-//                    BaseApplication.setCurrentUser(response.getData());
-//                    BaseApplication.getCurrentUser().setOrgName(mSuoshujigou.getText().toString());
-//                    startMainActivity();
-//                    break;
-//                default:
-//                    String msg = response.getErrorMsg();
-//                    if (StringUtils.isEmpty(msg)) {
-//                        msg = "网络连接错误，请稍后重试。";
-//                    }
-//                    showMessage(msg);
-//                    break;
-//            }
+            if (NumberUtils.isNumber(state)){
+                int i = NumberUtils.toInt(state);
+                if (i == 0){
+                    startMainActivity();
+                }else {
+                    showMessage(result);
+                }
+            }
         }
 
         @Override
         public void onFailure(String content) {
-            showToast("查询失败，请稍后重试");
+            showToast("登陆失败，请稍后重试");
         }
 
         @Override

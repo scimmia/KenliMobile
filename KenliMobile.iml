@@ -19,6 +19,9 @@
     <orderEntry type="library" name="json-20160212" level="project" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="library" name="glide-3.7.0" level="project" />
+    <orderEntry type="library" name="okio-1.8.0" level="project" />
+    <orderEntry type="library" name="android-async-http-1.4.9" level="project" />
+    <orderEntry type="library" name="httpclient-4.4.1.2" level="project" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">
