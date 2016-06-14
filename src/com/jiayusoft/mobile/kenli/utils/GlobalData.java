@@ -11,7 +11,7 @@ public interface GlobalData {
 
     public static final String versionCode = "versioncode";
     public static final String appname = "appname";
-    public static final String defaultSoftName = "doctor";
+    public static final String defaultSoftName = "kenlivisit";
     public static final String defaultNetErrorMsg = "网络连接错误，请检查网络或服务地址设置。";
 
 
@@ -109,7 +109,7 @@ public interface GlobalData {
     public static final String WS_Method_getJdinfo = "getJdinfo";
     public static final String WS_Method_getJwhinfo = "getJwhinfo";
 
-    public static final String WS_Method_checkUpdate = "checkAppUpdate";
+    public static final String WS_Method_checkUpdate = "checkUpdate";
     public static final String WS_Method_loginVerify = "verify";
     public static final String WS_Method_getYlfninfo = "getYlfninfo";
     public static final String WS_Method_uploadsave = "uploadsave";
