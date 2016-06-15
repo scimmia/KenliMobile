@@ -1,5 +1,6 @@
 package com.jiayusoft.mobile.kenli;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import butterknife.Bind;
 //import com.jiayusoft.mobile.kenli.suifangdengji.ChaxunActivity;
 //import com.jiayusoft.mobile.kenli.tongxunlu.TongxunluSearchActivity;
+import com.jiayusoft.mobile.kenli.login.LoginActivity;
 import com.jiayusoft.mobile.kenli.suifangdengji.ChaxunActivity;
 import com.jiayusoft.mobile.kenli.tongxunlu.TongxunluSearchActivity;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
@@ -68,16 +70,28 @@ public class MainActivity extends BaseActivity {
         iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_chatiqingkuang, R.string.main_chatiqingkuangn));
         iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_tongzhixiaoxi, R.string.main_tongzhixiaoxi));
         iconItems.add(new ClientinfoItem(TongxunluSearchActivity.class,R.drawable.icon_main_person,R.string.main_binganzhikong));
-        iconItems.add(new ClientinfoItem(MainActivity.class,R.drawable.icon_main_setting,R.string.main_shezhi));
+        iconItems.add(new ClientinfoItem(LoginActivity.class,R.drawable.icon_main_setting,R.string.main_shezhi));
         adapter = new ClientinfoAdapter(getBaseActivity(), iconItems);
         mGridMain.setAdapter(adapter);
         mGridMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DebugLog.e("position:" + position + iconItems.get(position).toString());
-                Bundle bundle = new Bundle();
-                bundle.putInt(itemType, iconItems.get(position).getmTitleId());
-                beginActivity(iconItems.get(position).getLaunche(), bundle);
+                switch(position){
+                    case 5:
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseActivity());
+                        SharedPreferences.Editor spEd = sp.edit();
+                        spEd.remove(loginAutoLogin);
+                        spEd.apply();
+                        beginActivity(LoginActivity.class);
+                        finish();
+                        break;
+                    default:
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(itemType, iconItems.get(position).getmTitleId());
+                        beginActivity(iconItems.get(position).getLaunche(), bundle);
+                        break;
+                }
             }
         });
     }
