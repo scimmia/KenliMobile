@@ -7,12 +7,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
 import com.jiayusoft.mobile.kenli.R;
+import com.jiayusoft.mobile.kenli.utils.DebugLog;
+import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
+import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
+import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceListener;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
+import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
+
+import org.apache.commons.lang3.StringUtils;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import butterknife.OnFocusChange;
 
 /**
  * Created by A on 2016/5/31.
@@ -133,10 +144,24 @@ public class SuifangUploadActivity extends BaseActivity {
     @Bind(R.id.main_layout)
     LinearLayout mainLayout;
 
+    ChaXunResult mChaXunResult;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(SuifangUploadActivity.this));
+        try {
+            mChaXunResult = null;
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                String jsonBody = bundle.getString(JsonBody, "");
+                if (StringUtils.isNotEmpty(jsonBody)) {
+                    mChaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -144,9 +169,91 @@ public class SuifangUploadActivity extends BaseActivity {
         setContentView(R.layout.suifangupload_activity);
     }
 
+
+    @OnFocusChange({R.id.isCondomAllergy, R.id.isFeelSick, R.id.isMensesPatient, R.id.isBlood, R.id.isBreastPain, R.id.pregnancyVisitTime, R.id.isConceived, R.id.hasBeenToldHealth, R.id.bornStatus, R.id.childtype, R.id.isBodyOk, R.id.isHot, R.id.isStomachPain, R.id.isVaginaBlood, R.id.isBabyHealthy, R.id.birthControlAfterBorn, R.id.isMensesOkPost, R.id.isMensesChangePost, R.id.isBloodPost, R.id.isStomachPainPost, R.id.isMensesCausePain, R.id.isLeukorrhoeaChange, R.id.isLeukorrhoeaWrong, R.id.isCircleLost, R.id.hasToldCheckCircle, R.id.type21IsHot, R.id.type21RedPain, R.id.type21IsMensesBlood, R.id.type21IsFeelSick, R.id.type21IsStomachPain, R.id.type21IsWc, R.id.type22IsOk, R.id.type22IsMensesOk, R.id.type22IsKnifeOk, R.id.type22IsPain, R.id.type22IsMensesWrong, R.id.type3IsTesticleOk, R.id.type41IsPain, R.id.type41IsBlood, R.id.type42IsOk, R.id.type42IsPain, R.id.type43IsBpChange, R.id.type43IsWeightChange, R.id.type43IsYellow, R.id.type43IsMensesChange, R.id.type43IsMensesClose, R.id.type43IsLocationChange, R.id.type5IsKnifeOk, R.id.type5IsMensesOk, R.id.type6IsMensesOk, R.id.type6IsTeachOther})
+    public void onFocusChange(View view, boolean focus) {
+        if (focus) {
+            onClick(view);
+        }
+    }
+
+    @OnClick({R.id.isCondomAllergy, R.id.isFeelSick, R.id.isMensesPatient, R.id.isBlood, R.id.isBreastPain, R.id.pregnancyVisitTime, R.id.isConceived, R.id.hasBeenToldHealth, R.id.bornStatus, R.id.childtype, R.id.isBodyOk, R.id.isHot, R.id.isStomachPain, R.id.isVaginaBlood, R.id.isBabyHealthy, R.id.birthControlAfterBorn, R.id.isMensesOkPost, R.id.isMensesChangePost, R.id.isBloodPost, R.id.isStomachPainPost, R.id.isMensesCausePain, R.id.isLeukorrhoeaChange, R.id.isLeukorrhoeaWrong, R.id.isCircleLost, R.id.hasToldCheckCircle, R.id.type21IsHot, R.id.type21RedPain, R.id.type21IsMensesBlood, R.id.type21IsFeelSick, R.id.type21IsStomachPain, R.id.type21IsWc, R.id.type22IsOk, R.id.type22IsMensesOk, R.id.type22IsKnifeOk, R.id.type22IsPain, R.id.type22IsMensesWrong, R.id.type3IsTesticleOk, R.id.type41IsPain, R.id.type41IsBlood, R.id.type42IsOk, R.id.type42IsPain, R.id.type43IsBpChange, R.id.type43IsWeightChange, R.id.type43IsYellow, R.id.type43IsMensesChange, R.id.type43IsMensesClose, R.id.type43IsLocationChange, R.id.type5IsKnifeOk, R.id.type5IsMensesOk, R.id.type6IsMensesOk, R.id.type6IsTeachOther})
+    public void onClick(View view) {
+        String[] itemNames = GlobalData.shifouNames;
+        String[] itemIDs = GlobalData.shifouIDs;
+
+        switch (view.getId()) {
+            case R.id.pregnancyVisitTime:
+                itemNames = GlobalData.fangshijiluNames;
+                itemIDs = GlobalData.fangshijiluIDs;
+                break;
+            case R.id.bornStatus:
+                itemNames = GlobalData.shengyuqingkuangNames;// TODO: 2016/6/1  
+                itemIDs = GlobalData.shengyuqingkuangIDs;
+                break;
+            case R.id.childtype:
+                itemNames = GlobalData.haiciNames;
+                itemIDs = GlobalData.haiciIDs;
+                break;
+            case R.id.birthControlAfterBorn:
+                itemNames = GlobalData.biyuncuoshiNames;
+                itemIDs = GlobalData.biyuncuoshiIDs;
+                break;
+        }
+
+        if (view instanceof EditText) {
+            EditText editText = (EditText) view;
+
+            showSingleDialog("",itemNames ,itemIDs, (String) editText.getTag(), new DialogListener() {
+                @Override
+                public void onSelected(String name, String id) {
+//                    DebugLog.e(name + "\t" + id);
+                    editText.setTag(id);
+                    editText.setText(name);
+                }
+
+                @Override
+                public void onClear() {
+//                    DebugLog.e("onClear");
+                    editText.setTag("");
+                    editText.setText("");
+                }
+            });
+        }
+    }
+
+    @OnFocusChange({R.id.getbookdate, R.id.lastMensesDate, R.id.bornDate})
+    public void onDateFocusChange(View view, boolean focus) {
+        if (focus) {
+            onDateClick(view);
+        }
+    }
+
+    @OnClick({R.id.getbookdate, R.id.lastMensesDate, R.id.bornDate})
+    public void onDateClick(View view) {
+        if (view instanceof EditText) {
+            EditText editText = (EditText) view;
+            showDateDialog((String) editText.getTag(), new DialogListener() {
+                @Override
+                public void onSelected(String name, String id) {
+//                    DebugLog.e(name +"\t"+ id);
+                    editText.setTag(id);
+                    editText.setText(name);
+                }
+
+                @Override
+                public void onClear() {
+                    DebugLog.e("onClear");
+                    editText.setTag("");
+                    editText.setText("");
+                }
+            });
+        }
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_suifangupload, menu);
         return true;
     }
@@ -155,13 +262,127 @@ public class SuifangUploadActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            beginActivity(SuifangdengjiActivity.class);
-
+//            beginActivity(SuifangdengjiActivity.class);
+            DebugLog.e((String) isCondomAllergy.getTag());
+            DebugLog.e((String) isFeelSick.getTag());
+            DebugLog.e((String) isMensesPatient.getTag());
+            uploadSuifang();
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
+    void uploadSuifang(){
+        SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
+        soapRequestStruct.setServiceNameSpace(WS_NameSpace);
+        soapRequestStruct.setServiceUrl(SERVICE_URL);
+        soapRequestStruct.setMethodName(WS_Method_uploadsave);
+        String content =
+                WebServiceUtil.buildItem("femaleId", mChaXunResult.getFemaleId())+
+                        WebServiceUtil.buildItem("femaleName", mChaXunResult.getFemaleName())+
+                        WebServiceUtil.buildItem("femaleBirthday", mChaXunResult.getFemaleBirthday())+
+                        WebServiceUtil.buildItem("femaleMaritalStatus", mChaXunResult.getFemaleMaritalStatus())+
+                        WebServiceUtil.buildItem("maleName", mChaXunResult.getMaleName())+
+                        WebServiceUtil.buildItem("maleBirthday", mChaXunResult.getMaleBirthday())+
+                        WebServiceUtil.buildItem("maleMaritalStatus", mChaXunResult.getMaleMaritalStatus())+
+                        WebServiceUtil.buildItem("maritalChangeDate", mChaXunResult.getMaritalChangeDate())+
+                        WebServiceUtil.buildItem("boyAmount", mChaXunResult.getBoyAmount())+
+                        WebServiceUtil.buildItem("girlAmount", mChaXunResult.getGirlAmount())+
+//                        WebServiceUtil.buildItem("longTimeMeasure", mChaXunResult.getti)+
+//                        WebServiceUtil.buildItem("fixDate", mChaXunResult.get)+
+                        WebServiceUtil.buildItem("orgid", mChaXunResult.getOrgid())+
+                        WebServiceUtil.buildItem("orgname", mChaXunResult.getOrgname())+
+//                        WebServiceUtil.buildItem("visitDate", mChaXunResult.getvi)+
+                        WebServiceUtil.buildItem("isCondomAllergy", (String) isCondomAllergy.getTag())+
+                        WebServiceUtil.buildItem("isFeelSick", (String) isFeelSick.getTag())+
+                        WebServiceUtil.buildItem("isMensesPatient", (String) isMensesPatient.getTag())+
+                        WebServiceUtil.buildItem("isBlood", (String) isBlood.getTag())+
+                        WebServiceUtil.buildItem("bloodLast",String.valueOf(bloodLast.getText()))+
+                        WebServiceUtil.buildItem("bloodTimes", String.valueOf(bloodTimes.getText()))+
+                        WebServiceUtil.buildItem("isBreastPain", (String) isBreastPain.getTag())+
+                        WebServiceUtil.buildItem("getbookdate", getbookdate.getText().toString())+
+                        WebServiceUtil.buildItem("lastMensesDate", lastMensesDate.getText().toString())+
+                        WebServiceUtil.buildItem("pregnancyVisitTime", (String) pregnancyVisitTime.getTag())+
+                        WebServiceUtil.buildItem("isConceived", (String) isConceived.getTag())+
+                        WebServiceUtil.buildItem("hasBeenToldHealth", (String) hasBeenToldHealth.getTag())+
+                        WebServiceUtil.buildItem("bornStatus", (String) bornStatus.getTag())+
+                        WebServiceUtil.buildItem("bornDate", bornDate.getText().toString())+
+                        WebServiceUtil.buildItem("childtype", (String) childtype.getTag())+
+                        WebServiceUtil.buildItem("isBodyOk", (String) isBodyOk.getTag())+
+                        WebServiceUtil.buildItem("isHot", (String) isHot.getTag())+
+                        WebServiceUtil.buildItem("isStomachPain", (String) isStomachPain.getTag())+
+                        WebServiceUtil.buildItem("isVaginaBlood", (String) isVaginaBlood.getTag())+
+                        WebServiceUtil.buildItem("isBabyHealthy", (String) isBabyHealthy.getTag())+
+                        WebServiceUtil.buildItem("birthControlAfterBorn", (String) birthControlAfterBorn.getTag())+
+                        WebServiceUtil.buildItem("isMensesOkPost", (String) isMensesOkPost.getTag())+
+                        WebServiceUtil.buildItem("isMensesChangePost", (String) isMensesChangePost.getTag())+
+                        WebServiceUtil.buildItem("isBloodPost", (String) isBloodPost.getTag())+
+                        WebServiceUtil.buildItem("isStomachPainPost", (String) isStomachPainPost.getTag())+
+                        WebServiceUtil.buildItem("isMensesCausePain", (String) isMensesCausePain.getTag())+
+                        WebServiceUtil.buildItem("isLeukorrhoeaChange", (String) isLeukorrhoeaChange.getTag())+
+                        WebServiceUtil.buildItem("isLeukorrhoeaWrong", (String) isLeukorrhoeaWrong.getTag())+
+                        WebServiceUtil.buildItem("isCircleLost", (String) isCircleLost.getTag())+
+                        WebServiceUtil.buildItem("hasToldCheckCircle", (String) hasToldCheckCircle.getTag())+
+                        WebServiceUtil.buildItem("type21IsHot", (String) type21IsHot.getTag())+
+                        WebServiceUtil.buildItem("type21RedPain", (String) type21RedPain.getTag())+
+                        WebServiceUtil.buildItem("type21IsMensesBlood", (String) type21IsMensesBlood.getTag())+
+                        WebServiceUtil.buildItem("type21IsFeelSick", (String) type21IsFeelSick.getTag())+
+                        WebServiceUtil.buildItem("type21IsStomachPain", (String) type21IsStomachPain.getTag())+
+                        WebServiceUtil.buildItem("type21IsWc", (String) type21IsWc.getTag())+
+                        WebServiceUtil.buildItem("type22IsOk", (String) type22IsOk.getTag())+
+                        WebServiceUtil.buildItem("type22IsMensesOk", (String) type22IsMensesOk.getTag())+
+                        WebServiceUtil.buildItem("type22IsKnifeOk", (String) type22IsKnifeOk.getTag())+
+                        WebServiceUtil.buildItem("type22IsPain", (String) type22IsPain.getTag())+
+                        WebServiceUtil.buildItem("type22IsMensesWrong", (String) type22IsMensesWrong.getTag())+
+                        WebServiceUtil.buildItem("type3IsTesticleOk", (String) type3IsTesticleOk.getTag())+
+                        WebServiceUtil.buildItem("type41IsPain", (String) type41IsPain.getTag())+
+                        WebServiceUtil.buildItem("type41IsBlood", (String) type41IsBlood.getTag())+
+                        WebServiceUtil.buildItem("type42IsOk", (String) type42IsOk.getTag())+
+                        WebServiceUtil.buildItem("type42IsPain", (String) type42IsPain.getTag())+
+                        WebServiceUtil.buildItem("type43IsBpChange", (String) type43IsBpChange.getTag())+
+                        WebServiceUtil.buildItem("type43IsWeightChange", (String) type43IsWeightChange.getTag())+
+                        WebServiceUtil.buildItem("type43IsYellow", (String) type43IsYellow.getTag())+
+                        WebServiceUtil.buildItem("type43IsMensesChange", (String) type43IsMensesChange.getTag())+
+                        WebServiceUtil.buildItem("type43IsMensesClose", (String) type43IsMensesClose.getTag())+
+                        WebServiceUtil.buildItem("type43IsLocationChange", (String) type43IsLocationChange.getTag())+
+                        WebServiceUtil.buildItem("type5IsKnifeOk", (String) type5IsKnifeOk.getTag())+
+                        WebServiceUtil.buildItem("type5IsMensesOk", (String) type5IsMensesOk.getTag())+
+                        WebServiceUtil.buildItem("type6IsMensesOk", (String) type6IsMensesOk.getTag())+
+                        WebServiceUtil.buildItem("type6IsTeachOther", (String) type6IsTeachOther.getTag());
+
+        String xmlString = WebServiceUtil.buildXml(content);
+        xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><request><femaleId>370521105207000017</femaleId><femaleName>秦玉玲</femaleName><femaleBirthday>1968-02-20</femaleBirthday><femaleMaritalStatus>21</femaleMaritalStatus><maleName>刘明安</maleName><maleBirthday>1969-03-12</maleBirthday><maleMaritalStatus>21</maleMaritalStatus><maritalChangeDate>1991-03-07</maritalChangeDate><boyAmount>1</boyAmount><girlAmount>1</girlAmount><orgid>370521105207</orgid><orgname>永胜村委会</orgname><isCondomAllergy>1</isCondomAllergy><isFeelSick>1</isFeelSick><isMensesPatient>0</isMensesPatient><isBlood>0</isBlood><bloodLast>25</bloodLast><bloodTimes>25</bloodTimes><isBreastPain>1</isBreastPain><getbookdate>2016-02-12</getbookdate><lastMensesDate>2016-05-12</lastMensesDate><pregnancyVisitTime>7</pregnancyVisitTime><isConceived>1</isConceived><hasBeenToldHealth>0</hasBeenToldHealth><bornStatus>1</bornStatus><bornDate>1999-01-12</bornDate><childtype>5</childtype><isBodyOk>0</isBodyOk><isHot>1</isHot><isStomachPain>0</isStomachPain><isVaginaBlood>1</isVaginaBlood><isBabyHealthy>0</isBabyHealthy><birthControlAfterBorn>600</birthControlAfterBorn><isMensesOkPost>1</isMensesOkPost><isMensesChangePost>1</isMensesChangePost><isBloodPost>0</isBloodPost><isStomachPainPost>1</isStomachPainPost><isMensesCausePain>1</isMensesCausePain><isLeukorrhoeaChange>1</isLeukorrhoeaChange><isLeukorrhoeaWrong>1</isLeukorrhoeaWrong><isCircleLost>1</isCircleLost><hasToldCheckCircle>0</hasToldCheckCircle><type21IsHot>0</type21IsHot><type21RedPain>0</type21RedPain><type21IsMensesBlood>1</type21IsMensesBlood><type21IsFeelSick>0</type21IsFeelSick><type21IsStomachPain>1</type21IsStomachPain><type21IsWc>0</type21IsWc><type22IsOk>1</type22IsOk><type22IsMensesOk>0</type22IsMensesOk><type22IsKnifeOk>0</type22IsKnifeOk><type22IsPain>1</type22IsPain><type22IsMensesWrong>0</type22IsMensesWrong><type3IsTesticleOk>0</type3IsTesticleOk><type41IsPain>0</type41IsPain><type41IsBlood>0</type41IsBlood><type42IsOk>0</type42IsOk><type42IsPain>1</type42IsPain><type43IsBpChange>1</type43IsBpChange><type43IsWeightChange>0</type43IsWeightChange><type43IsYellow>0</type43IsYellow><type43IsMensesChange>0</type43IsMensesChange><type43IsMensesClose>1</type43IsMensesClose><type43IsLocationChange>1</type43IsLocationChange><type5IsKnifeOk>0</type5IsKnifeOk><type5IsMensesOk>0</type5IsMensesOk><type6IsMensesOk>0</type6IsMensesOk><type6IsTeachOther>0</type6IsTeachOther><imageName>123</imageName><videoName>321</videoName><fixDate>2016-06-11</fixDate><longTimeMeasure>321</longTimeMeasure><visitDate>2016-01-01 02:08:42</visitDate></request></root>";
+        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
+//        soapRequestStruct.addProperty("image","");
+//        soapRequestStruct.addProperty("video","");
+        DebugLog.e("WS_Property_Binding: " + xmlString);
+
+        new WebServiceTask(SuifangUploadActivity.this, "提交中...",soapRequestStruct, uploadListener).execute();
+
+    }
+
+    WebServiceListener uploadListener = new WebServiceListener() {
+        @Override
+        public void onSuccess(String content) {
+//            try {
+//                Bundle bundle = new Bundle();
+//                bundle.putString(JsonBody,content);
+//                beginActivity(ChaxunResultActivity.class, bundle);
+//            } catch (Exception e) {
+//                DebugLog.e("JSON exception"+ e.getMessage());
+//                e.printStackTrace();
+//            }
+            DebugLog.d("XML   "+ content);
+        }
+
+        @Override
+        public void onFailure(String content) {
+            showToast("提交失败，请稍后重试");
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            showToast("网络异常，请稍后重试");
+        }
+    };
 }

@@ -14,35 +14,14 @@ import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
-import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
-import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceListener;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
-import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONException;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.JSONObject;
-import com.jiayusoft.mobile.kenli.utils.webservice.xmljson.XML;
+import com.jiayusoft.mobile.kenli.utils.webservice.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ChaxunActivity extends BaseActivity {
-//    @Bind(R.id.sp_quxian)
-//    MaterialEditText spQuxian;
-//    @Bind(R.id.sp_jiedao)
-//    MaterialEditText spJiedao;
-//    @Bind(R.id.sp_shequ)
-//    MaterialEditText spShequ;
-//    @Bind(R.id.xingming)
-//    MaterialEditText xingming;
-//    @Bind(R.id.shenfenzheng)
-//    MaterialEditText shenfenzheng;
-//    @Bind(R.id.sp_shifousuifang)
-//    MaterialEditText spShifousuifang;
-//    @Bind(R.id.et_suifangjiandingshijian)
-//    MaterialEditText etSuifangjiandingshijian;
-
     @Bind(R.id.sp_quxian)
     EditText spQuxian;
     @Bind(R.id.sp_jiedao)
@@ -111,6 +90,9 @@ public class ChaxunActivity extends BaseActivity {
     }
 
     void test(){
+        ArrayList<String> files = new ArrayList<>();
+        files.add("/storage/emulated/0/10086_JF/styles/default/images/colicon21.png");
+        new HttpUploadTask(ChaxunActivity.this,1,files,1).execute();
 
     }
 

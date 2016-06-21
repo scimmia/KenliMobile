@@ -113,8 +113,10 @@ public class SuifangJibenxinxiActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            beginActivity(SuifangUploadActivity.class);
-
+            String json = new Gson().toJson(mChaXunResult);
+            Bundle bundle = new Bundle();
+            bundle.putString(JsonBody,json);
+            beginActivity(SuifangUploadActivity.class, bundle);
             return true;
         }
 
