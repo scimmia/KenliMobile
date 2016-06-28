@@ -3,7 +3,6 @@ package com.jiayusoft.mobile.kenli.suifangdengji;
 //import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Xml;
 import android.view.*;
 import android.widget.AdapterView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
