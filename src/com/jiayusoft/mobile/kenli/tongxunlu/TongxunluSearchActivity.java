@@ -12,7 +12,6 @@ import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
-import com.jiayusoft.mobile.kenli.utils.database.DBHelper;
 import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
 import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
 import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
@@ -20,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.LinkedList;
-//import com.rengwuxian.materialedittext.MaterialEditText;
 
 public class TongxunluSearchActivity extends BaseActivity {
 
@@ -32,8 +30,6 @@ public class TongxunluSearchActivity extends BaseActivity {
     EditText spShequ;
     @Bind(R.id.et_xingming)
     EditText etXingming;
-    @Bind(R.id.et_shenfenzheng)
-    EditText etShenfenzheng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +45,24 @@ public class TongxunluSearchActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tongxunlu_search, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            searchTongxunlu();
-//            beginActivity(TongxunluResultActivity.class);
+//            searchTongxunlu();
+            String content =
+                    WebServiceUtil.buildItem("xiancode", (String) spQuxian.getTag())+
+                            WebServiceUtil.buildItem("jdcode", (String) spJiedao.getTag())+
+                            WebServiceUtil.buildItem("jwhcode", (String) spShequ.getTag())+
+                            WebServiceUtil.buildItem("xm", String.valueOf(etXingming.getText()));
+            Bundle bundle = new Bundle();
+            bundle.putString(JsonBody, content);
+            beginActivity(TongxunluResultActivity.class,bundle);
             return true;
         }
 

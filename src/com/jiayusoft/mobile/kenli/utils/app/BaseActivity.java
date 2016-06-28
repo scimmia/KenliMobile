@@ -300,4 +300,17 @@ public abstract class BaseActivity extends Activity implements GlobalData {
                 .create();
         mAlertDialog.show();
     }
+
+    public String getJsonBody(){
+        try {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                return bundle.getString(JsonBody, "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }

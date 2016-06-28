@@ -53,12 +53,6 @@
             <EditText
                     android:id="@+id/et_xingming"
                     style="@style/normal_edittext"/>
-            <TextView
-                    android:text="身份证号:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_shenfenzheng"
-                    style="@style/normal_edittext"/>
         </GridLayout>
 
     </RelativeLayout>
