@@ -141,8 +141,6 @@ public class SuifangUploadActivity extends BaseActivity {
     EditText type6IsMensesOk;
     @Bind(R.id.type6IsTeachOther)
     EditText type6IsTeachOther;
-    @Bind(R.id.main_layout)
-    LinearLayout mainLayout;
 
     ChaXunResult mChaXunResult;
 
@@ -150,17 +148,11 @@ public class SuifangUploadActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(SuifangUploadActivity.this));
-        try {
+        String jsonBody = getJsonBody();
+        if (StringUtils.isNotEmpty(jsonBody)) {
+            mChaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
+        } else {
             mChaXunResult = null;
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null) {
-                String jsonBody = bundle.getString(JsonBody, "");
-                if (StringUtils.isNotEmpty(jsonBody)) {
-                    mChaXunResult = new Gson().fromJson(jsonBody, ChaXunResult.class);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
