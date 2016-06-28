@@ -74,5 +74,7 @@
     <string name="search_shequ">社区(村)</string>
     <string name="title_activity_chaxun">查询育龄妇女-筛选条件</string>
     <string name="title_activity_chaxun_result">选择育龄妇女</string>
+    <string name="title_activity_tongzhilist">通知列表</string>
+    <string name="title_activity_tongzhidetail">通知信息</string>
     <string name="title_activity_suifangjibenxinxi">基本信息</string>
 </resources>

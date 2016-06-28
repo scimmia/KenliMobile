@@ -50,5 +50,9 @@
         <activity android:name=".suifangdengji.SuifangJibenxinxiActivity"
                   android:label="@string/title_activity_suifangjibenxinxi" />
         <activity android:name=".suifangdengji.SuifangUploadActivity" />
+        <activity android:name=".tongzhixinxi.TongzhiListActivity"
+                  android:label="@string/title_activity_tongzhilist"/>
+        <activity android:name=".tongzhixinxi.TongzhiDetailActivity"
+                  android:label="@string/title_activity_tongzhidetail"/>
     </application>
 </manifest>

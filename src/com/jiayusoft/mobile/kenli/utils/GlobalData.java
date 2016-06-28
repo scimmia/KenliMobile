@@ -114,6 +114,9 @@ public interface GlobalData {
     public static final String WS_Method_getYlfninfo = "getYlfninfo";
     public static final String WS_Method_uploadsave = "uploadsave";
 
+    public static final String WS_Method_getNoticeList = "getNoticeList";
+    public static final String WS_Method_getNoticeDetail = "getNoticeDetail";
+
     public static final String WS_Property_Binding = "Request";
     public static final String WS_Property_Save = "Request";
 

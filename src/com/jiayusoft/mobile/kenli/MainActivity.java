@@ -17,6 +17,7 @@ import butterknife.Bind;
 import com.jiayusoft.mobile.kenli.login.LoginActivity;
 import com.jiayusoft.mobile.kenli.suifangdengji.ChaxunActivity;
 import com.jiayusoft.mobile.kenli.tongxunlu.TongxunluSearchActivity;
+import com.jiayusoft.mobile.kenli.tongzhixinxi.TongzhiListActivity;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.clientinfo.ClientinfoAdapter;
@@ -68,7 +69,7 @@ public class MainActivity extends BaseActivity {
         iconItems.add(new ClientinfoItem(ChaxunActivity.class, R.drawable.icon_main_suifangdengji, R.string.main_suifangdengji));
         iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_wischaxun, R.string.main_wischaxun));
         iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_chatiqingkuang, R.string.main_chatiqingkuangn));
-        iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_tongzhixiaoxi, R.string.main_tongzhixiaoxi));
+        iconItems.add(new ClientinfoItem(TongzhiListActivity.class, R.drawable.icon_main_tongzhixiaoxi, R.string.main_tongzhixiaoxi));
         iconItems.add(new ClientinfoItem(TongxunluSearchActivity.class,R.drawable.icon_main_person,R.string.main_binganzhikong));
         iconItems.add(new ClientinfoItem(LoginActivity.class,R.drawable.icon_main_setting,R.string.main_shezhi));
         adapter = new ClientinfoAdapter(getBaseActivity(), iconItems);
