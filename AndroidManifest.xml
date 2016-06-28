@@ -39,15 +39,15 @@
                 android:label="@string/title_activity_tongxunlu_result">
         </activity>
         <activity
-                android:name=".suifangdengji.ChaxunActivity"
+                android:name=".suifangdengji.FunvSearchActivity"
                 android:label="@string/title_activity_chaxun" >
         </activity>
         <activity
-                android:name=".suifangdengji.ChaxunResultActivity"
+                android:name=".suifangdengji.FunvResultActivity"
                 android:label="@string/title_activity_chaxun_result" >
         </activity>
         <activity android:name=".suifangdengji.SuifangdengjiActivity"/>
-        <activity android:name=".suifangdengji.SuifangJibenxinxiActivity"
+        <activity android:name=".suifangdengji.FunvDetailActivity"
                   android:label="@string/title_activity_suifangjibenxinxi" />
         <activity android:name=".suifangdengji.SuifangUploadActivity" />
         <activity android:name=".tongzhixinxi.TongzhiListActivity"

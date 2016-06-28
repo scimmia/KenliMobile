@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Created by Hi on 2016-5-10.
  */
-public class SuifangJibenxinxiActivity extends BaseActivity {
+public class FunvDetailActivity extends BaseActivity {
     @Bind(R.id.et_nvfangxingming)
     EditText etNvfangxingming;
     @Bind(R.id.et_nvfangshenfenzheng)
@@ -54,7 +54,7 @@ public class SuifangJibenxinxiActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(SuifangJibenxinxiActivity.this));
+        findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(FunvDetailActivity.this));
         try {
             mChaXunResult = null;
             Bundle bundle = getIntent().getExtras();

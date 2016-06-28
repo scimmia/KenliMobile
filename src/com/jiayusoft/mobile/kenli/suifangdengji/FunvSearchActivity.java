@@ -7,7 +7,6 @@ import android.widget.EditText;
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
-import com.google.gson.Gson;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
@@ -21,7 +20,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ChaxunActivity extends BaseActivity {
+public class FunvSearchActivity extends BaseActivity {
     @Bind(R.id.sp_quxian)
     EditText spQuxian;
     @Bind(R.id.sp_jiedao)
@@ -40,7 +39,7 @@ public class ChaxunActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(ChaxunActivity.this));
+        findViewById(R.id.main_layout).setOnClickListener(new HideKeyboardListener(FunvSearchActivity.this));
     }
 
     @Override
@@ -50,7 +49,6 @@ public class ChaxunActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chaxun, menu);
         return true;
     }
@@ -80,8 +78,18 @@ public class ChaxunActivity extends BaseActivity {
 //        DebugLog.d("JSON   "+jsonObj.toString());
 //        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            searchChaXun();
-
+//            searchChaXun();
+            String content =
+                    WebServiceUtil.buildItem("xiancode", (String) spQuxian.getTag())+
+                            WebServiceUtil.buildItem("jdcode", (String) spJiedao.getTag())+
+                            WebServiceUtil.buildItem("jwhcode", (String) spShequ.getTag())+
+                            WebServiceUtil.buildItem("xm", String.valueOf(etXingming.getText()))+
+                            WebServiceUtil.buildItem("sfzh", String.valueOf(etShenfenzheng.getText()))+
+                            WebServiceUtil.buildItem("flag", (String) spShifousuifang.getTag())+
+                            WebServiceUtil.buildItem("sfrq", String.valueOf(etSuifangjiandingshijian.getText()));
+            Bundle bundle = new Bundle();
+            bundle.putString(JsonBody, content);
+            beginActivity(FunvResultActivity.class,bundle);
             return true;
         }
 
@@ -92,57 +100,9 @@ public class ChaxunActivity extends BaseActivity {
     void test(){
         ArrayList<String> files = new ArrayList<>();
         files.add("/storage/emulated/0/10086_JF/styles/default/images/colicon21.png");
-        new HttpUploadTask(ChaxunActivity.this,1,files,1).execute();
+        new HttpUploadTask(FunvSearchActivity.this,1,files,1).execute();
 
     }
-
-    void searchChaXun(){
-        SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
-        soapRequestStruct.setServiceNameSpace(WS_NameSpace);
-        soapRequestStruct.setServiceUrl(SERVICE_URL);
-        soapRequestStruct.setMethodName(WS_Method_getYlfninfo);
-        String content =
-                WebServiceUtil.buildItem("xiancode", (String) spQuxian.getTag())+
-                WebServiceUtil.buildItem("jdcode", (String) spJiedao.getTag())+
-                WebServiceUtil.buildItem("jwhcode", (String) spShequ.getTag())+
-                WebServiceUtil.buildItem("xm", String.valueOf(etXingming.getText()))+
-                WebServiceUtil.buildItem("sfzh", String.valueOf(etShenfenzheng.getText()))+
-                WebServiceUtil.buildItem("flag", (String) spShifousuifang.getTag())+
-                WebServiceUtil.buildItem("sfrq", String.valueOf(etSuifangjiandingshijian.getText()));
-
-        String xmlString =
-                WebServiceUtil.buildXml("getYlfninfo", content);
-        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
-        DebugLog.e("WS_Property_Binding: " + xmlString);
-
-        new WebServiceTask(ChaxunActivity.this, "查询中...",soapRequestStruct, chaXunListener).execute();
-
-    }
-
-    WebServiceListener chaXunListener = new WebServiceListener() {
-        @Override
-        public void onSuccess(String content) {
-            try {
-                Bundle bundle = new Bundle();
-                bundle.putString(JsonBody,content);
-                beginActivity(ChaxunResultActivity.class, bundle);
-            } catch (Exception e) {
-                DebugLog.e("JSON exception"+ e.getMessage());
-                e.printStackTrace();
-            }
-            DebugLog.d("XML   "+ content);
-        }
-
-        @Override
-        public void onFailure(String content) {
-            showToast("查询失败，请稍后重试");
-        }
-
-        @Override
-        public void onError(Exception exception) {
-            showToast("网络异常，请稍后重试");
-        }
-    };
 
     String[] addressNames;
     String[] addressIDs;
