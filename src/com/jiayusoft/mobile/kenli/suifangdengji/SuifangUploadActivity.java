@@ -1,29 +1,38 @@
 package com.jiayusoft.mobile.kenli.suifangdengji;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-
+import android.widget.ImageView;
+import butterknife.Bind;
+import butterknife.OnClick;
+import butterknife.OnFocusChange;
 import com.google.gson.Gson;
+import com.jiayusoft.mobile.kenli.BaseApplication;
 import com.jiayusoft.mobile.kenli.R;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.GlobalData;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.app.dialog.DialogListener;
 import com.jiayusoft.mobile.kenli.utils.app.listener.HideKeyboardListener;
+import com.jiayusoft.mobile.kenli.utils.io.FileUtil;
 import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
 import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceListener;
 import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceTask;
 import com.jiayusoft.mobile.kenli.utils.webservice.WebServiceUtil;
-
 import org.apache.commons.lang3.StringUtils;
 
-import butterknife.Bind;
-import butterknife.OnClick;
-import butterknife.OnFocusChange;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 /**
  * Created by A on 2016/5/31.
@@ -141,6 +150,10 @@ public class SuifangUploadActivity extends BaseActivity {
     EditText type6IsMensesOk;
     @Bind(R.id.type6IsTeachOther)
     EditText type6IsTeachOther;
+    @Bind(R.id.phote_taked)
+    ImageView photeTaked;
+    @Bind(R.id.video_taked)
+    ImageView videoTaked;
 
     ChaXunResult mChaXunResult;
 
@@ -196,7 +209,7 @@ public class SuifangUploadActivity extends BaseActivity {
         if (view instanceof EditText) {
             EditText editText = (EditText) view;
 
-            showSingleDialog("",itemNames ,itemIDs, (String) editText.getTag(), new DialogListener() {
+            showSingleDialog("", itemNames, itemIDs, (String) editText.getTag(), new DialogListener() {
                 @Override
                 public void onSelected(String name, String id) {
 //                    DebugLog.e(name + "\t" + id);
@@ -264,92 +277,92 @@ public class SuifangUploadActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void uploadSuifang(){
+    void uploadSuifang() {
         SoapRequestStruct soapRequestStruct = new SoapRequestStruct();
         soapRequestStruct.setServiceNameSpace(WS_NameSpace);
         soapRequestStruct.setServiceUrl(SERVICE_URL);
         soapRequestStruct.setMethodName(WS_Method_uploadsave);
         String content =
-                WebServiceUtil.buildItem("femaleId", mChaXunResult.getFemaleId())+
-                        WebServiceUtil.buildItem("femaleName", mChaXunResult.getFemaleName())+
-                        WebServiceUtil.buildItem("femaleBirthday", mChaXunResult.getFemaleBirthday())+
-                        WebServiceUtil.buildItem("femaleMaritalStatus", mChaXunResult.getFemaleMaritalStatus())+
-                        WebServiceUtil.buildItem("maleName", mChaXunResult.getMaleName())+
-                        WebServiceUtil.buildItem("maleBirthday", mChaXunResult.getMaleBirthday())+
-                        WebServiceUtil.buildItem("maleMaritalStatus", mChaXunResult.getMaleMaritalStatus())+
-                        WebServiceUtil.buildItem("maritalChangeDate", mChaXunResult.getMaritalChangeDate())+
-                        WebServiceUtil.buildItem("boyAmount", mChaXunResult.getBoyAmount())+
-                        WebServiceUtil.buildItem("girlAmount", mChaXunResult.getGirlAmount())+
+                WebServiceUtil.buildItem("femaleId", mChaXunResult.getFemaleId()) +
+                        WebServiceUtil.buildItem("femaleName", mChaXunResult.getFemaleName()) +
+                        WebServiceUtil.buildItem("femaleBirthday", mChaXunResult.getFemaleBirthday()) +
+                        WebServiceUtil.buildItem("femaleMaritalStatus", mChaXunResult.getFemaleMaritalStatus()) +
+                        WebServiceUtil.buildItem("maleName", mChaXunResult.getMaleName()) +
+                        WebServiceUtil.buildItem("maleBirthday", mChaXunResult.getMaleBirthday()) +
+                        WebServiceUtil.buildItem("maleMaritalStatus", mChaXunResult.getMaleMaritalStatus()) +
+                        WebServiceUtil.buildItem("maritalChangeDate", mChaXunResult.getMaritalChangeDate()) +
+                        WebServiceUtil.buildItem("boyAmount", mChaXunResult.getBoyAmount()) +
+                        WebServiceUtil.buildItem("girlAmount", mChaXunResult.getGirlAmount()) +
 //                        WebServiceUtil.buildItem("longTimeMeasure", mChaXunResult.getti)+
 //                        WebServiceUtil.buildItem("fixDate", mChaXunResult.get)+
-                        WebServiceUtil.buildItem("orgid", mChaXunResult.getOrgid())+
-                        WebServiceUtil.buildItem("orgname", mChaXunResult.getOrgname())+
+                        WebServiceUtil.buildItem("orgid", mChaXunResult.getOrgid()) +
+                        WebServiceUtil.buildItem("orgname", mChaXunResult.getOrgname()) +
 //                        WebServiceUtil.buildItem("visitDate", mChaXunResult.getvi)+
-                        WebServiceUtil.buildItem("isCondomAllergy", (String) isCondomAllergy.getTag())+
-                        WebServiceUtil.buildItem("isFeelSick", (String) isFeelSick.getTag())+
-                        WebServiceUtil.buildItem("isMensesPatient", (String) isMensesPatient.getTag())+
-                        WebServiceUtil.buildItem("isBlood", (String) isBlood.getTag())+
-                        WebServiceUtil.buildItem("bloodLast",String.valueOf(bloodLast.getText()))+
-                        WebServiceUtil.buildItem("bloodTimes", String.valueOf(bloodTimes.getText()))+
-                        WebServiceUtil.buildItem("isBreastPain", (String) isBreastPain.getTag())+
-                        WebServiceUtil.buildItem("getbookdate", getbookdate.getText().toString())+
-                        WebServiceUtil.buildItem("lastMensesDate", lastMensesDate.getText().toString())+
-                        WebServiceUtil.buildItem("pregnancyVisitTime", (String) pregnancyVisitTime.getTag())+
-                        WebServiceUtil.buildItem("isConceived", (String) isConceived.getTag())+
-                        WebServiceUtil.buildItem("hasBeenToldHealth", (String) hasBeenToldHealth.getTag())+
-                        WebServiceUtil.buildItem("bornStatus", (String) bornStatus.getTag())+
-                        WebServiceUtil.buildItem("bornDate", bornDate.getText().toString())+
-                        WebServiceUtil.buildItem("childtype", (String) childtype.getTag())+
-                        WebServiceUtil.buildItem("isBodyOk", (String) isBodyOk.getTag())+
-                        WebServiceUtil.buildItem("isHot", (String) isHot.getTag())+
-                        WebServiceUtil.buildItem("isStomachPain", (String) isStomachPain.getTag())+
-                        WebServiceUtil.buildItem("isVaginaBlood", (String) isVaginaBlood.getTag())+
-                        WebServiceUtil.buildItem("isBabyHealthy", (String) isBabyHealthy.getTag())+
-                        WebServiceUtil.buildItem("birthControlAfterBorn", (String) birthControlAfterBorn.getTag())+
-                        WebServiceUtil.buildItem("isMensesOkPost", (String) isMensesOkPost.getTag())+
-                        WebServiceUtil.buildItem("isMensesChangePost", (String) isMensesChangePost.getTag())+
-                        WebServiceUtil.buildItem("isBloodPost", (String) isBloodPost.getTag())+
-                        WebServiceUtil.buildItem("isStomachPainPost", (String) isStomachPainPost.getTag())+
-                        WebServiceUtil.buildItem("isMensesCausePain", (String) isMensesCausePain.getTag())+
-                        WebServiceUtil.buildItem("isLeukorrhoeaChange", (String) isLeukorrhoeaChange.getTag())+
-                        WebServiceUtil.buildItem("isLeukorrhoeaWrong", (String) isLeukorrhoeaWrong.getTag())+
-                        WebServiceUtil.buildItem("isCircleLost", (String) isCircleLost.getTag())+
-                        WebServiceUtil.buildItem("hasToldCheckCircle", (String) hasToldCheckCircle.getTag())+
-                        WebServiceUtil.buildItem("type21IsHot", (String) type21IsHot.getTag())+
-                        WebServiceUtil.buildItem("type21RedPain", (String) type21RedPain.getTag())+
-                        WebServiceUtil.buildItem("type21IsMensesBlood", (String) type21IsMensesBlood.getTag())+
-                        WebServiceUtil.buildItem("type21IsFeelSick", (String) type21IsFeelSick.getTag())+
-                        WebServiceUtil.buildItem("type21IsStomachPain", (String) type21IsStomachPain.getTag())+
-                        WebServiceUtil.buildItem("type21IsWc", (String) type21IsWc.getTag())+
-                        WebServiceUtil.buildItem("type22IsOk", (String) type22IsOk.getTag())+
-                        WebServiceUtil.buildItem("type22IsMensesOk", (String) type22IsMensesOk.getTag())+
-                        WebServiceUtil.buildItem("type22IsKnifeOk", (String) type22IsKnifeOk.getTag())+
-                        WebServiceUtil.buildItem("type22IsPain", (String) type22IsPain.getTag())+
-                        WebServiceUtil.buildItem("type22IsMensesWrong", (String) type22IsMensesWrong.getTag())+
-                        WebServiceUtil.buildItem("type3IsTesticleOk", (String) type3IsTesticleOk.getTag())+
-                        WebServiceUtil.buildItem("type41IsPain", (String) type41IsPain.getTag())+
-                        WebServiceUtil.buildItem("type41IsBlood", (String) type41IsBlood.getTag())+
-                        WebServiceUtil.buildItem("type42IsOk", (String) type42IsOk.getTag())+
-                        WebServiceUtil.buildItem("type42IsPain", (String) type42IsPain.getTag())+
-                        WebServiceUtil.buildItem("type43IsBpChange", (String) type43IsBpChange.getTag())+
-                        WebServiceUtil.buildItem("type43IsWeightChange", (String) type43IsWeightChange.getTag())+
-                        WebServiceUtil.buildItem("type43IsYellow", (String) type43IsYellow.getTag())+
-                        WebServiceUtil.buildItem("type43IsMensesChange", (String) type43IsMensesChange.getTag())+
-                        WebServiceUtil.buildItem("type43IsMensesClose", (String) type43IsMensesClose.getTag())+
-                        WebServiceUtil.buildItem("type43IsLocationChange", (String) type43IsLocationChange.getTag())+
-                        WebServiceUtil.buildItem("type5IsKnifeOk", (String) type5IsKnifeOk.getTag())+
-                        WebServiceUtil.buildItem("type5IsMensesOk", (String) type5IsMensesOk.getTag())+
-                        WebServiceUtil.buildItem("type6IsMensesOk", (String) type6IsMensesOk.getTag())+
+                        WebServiceUtil.buildItem("isCondomAllergy", (String) isCondomAllergy.getTag()) +
+                        WebServiceUtil.buildItem("isFeelSick", (String) isFeelSick.getTag()) +
+                        WebServiceUtil.buildItem("isMensesPatient", (String) isMensesPatient.getTag()) +
+                        WebServiceUtil.buildItem("isBlood", (String) isBlood.getTag()) +
+                        WebServiceUtil.buildItem("bloodLast", String.valueOf(bloodLast.getText())) +
+                        WebServiceUtil.buildItem("bloodTimes", String.valueOf(bloodTimes.getText())) +
+                        WebServiceUtil.buildItem("isBreastPain", (String) isBreastPain.getTag()) +
+                        WebServiceUtil.buildItem("getbookdate", getbookdate.getText().toString()) +
+                        WebServiceUtil.buildItem("lastMensesDate", lastMensesDate.getText().toString()) +
+                        WebServiceUtil.buildItem("pregnancyVisitTime", (String) pregnancyVisitTime.getTag()) +
+                        WebServiceUtil.buildItem("isConceived", (String) isConceived.getTag()) +
+                        WebServiceUtil.buildItem("hasBeenToldHealth", (String) hasBeenToldHealth.getTag()) +
+                        WebServiceUtil.buildItem("bornStatus", (String) bornStatus.getTag()) +
+                        WebServiceUtil.buildItem("bornDate", bornDate.getText().toString()) +
+                        WebServiceUtil.buildItem("childtype", (String) childtype.getTag()) +
+                        WebServiceUtil.buildItem("isBodyOk", (String) isBodyOk.getTag()) +
+                        WebServiceUtil.buildItem("isHot", (String) isHot.getTag()) +
+                        WebServiceUtil.buildItem("isStomachPain", (String) isStomachPain.getTag()) +
+                        WebServiceUtil.buildItem("isVaginaBlood", (String) isVaginaBlood.getTag()) +
+                        WebServiceUtil.buildItem("isBabyHealthy", (String) isBabyHealthy.getTag()) +
+                        WebServiceUtil.buildItem("birthControlAfterBorn", (String) birthControlAfterBorn.getTag()) +
+                        WebServiceUtil.buildItem("isMensesOkPost", (String) isMensesOkPost.getTag()) +
+                        WebServiceUtil.buildItem("isMensesChangePost", (String) isMensesChangePost.getTag()) +
+                        WebServiceUtil.buildItem("isBloodPost", (String) isBloodPost.getTag()) +
+                        WebServiceUtil.buildItem("isStomachPainPost", (String) isStomachPainPost.getTag()) +
+                        WebServiceUtil.buildItem("isMensesCausePain", (String) isMensesCausePain.getTag()) +
+                        WebServiceUtil.buildItem("isLeukorrhoeaChange", (String) isLeukorrhoeaChange.getTag()) +
+                        WebServiceUtil.buildItem("isLeukorrhoeaWrong", (String) isLeukorrhoeaWrong.getTag()) +
+                        WebServiceUtil.buildItem("isCircleLost", (String) isCircleLost.getTag()) +
+                        WebServiceUtil.buildItem("hasToldCheckCircle", (String) hasToldCheckCircle.getTag()) +
+                        WebServiceUtil.buildItem("type21IsHot", (String) type21IsHot.getTag()) +
+                        WebServiceUtil.buildItem("type21RedPain", (String) type21RedPain.getTag()) +
+                        WebServiceUtil.buildItem("type21IsMensesBlood", (String) type21IsMensesBlood.getTag()) +
+                        WebServiceUtil.buildItem("type21IsFeelSick", (String) type21IsFeelSick.getTag()) +
+                        WebServiceUtil.buildItem("type21IsStomachPain", (String) type21IsStomachPain.getTag()) +
+                        WebServiceUtil.buildItem("type21IsWc", (String) type21IsWc.getTag()) +
+                        WebServiceUtil.buildItem("type22IsOk", (String) type22IsOk.getTag()) +
+                        WebServiceUtil.buildItem("type22IsMensesOk", (String) type22IsMensesOk.getTag()) +
+                        WebServiceUtil.buildItem("type22IsKnifeOk", (String) type22IsKnifeOk.getTag()) +
+                        WebServiceUtil.buildItem("type22IsPain", (String) type22IsPain.getTag()) +
+                        WebServiceUtil.buildItem("type22IsMensesWrong", (String) type22IsMensesWrong.getTag()) +
+                        WebServiceUtil.buildItem("type3IsTesticleOk", (String) type3IsTesticleOk.getTag()) +
+                        WebServiceUtil.buildItem("type41IsPain", (String) type41IsPain.getTag()) +
+                        WebServiceUtil.buildItem("type41IsBlood", (String) type41IsBlood.getTag()) +
+                        WebServiceUtil.buildItem("type42IsOk", (String) type42IsOk.getTag()) +
+                        WebServiceUtil.buildItem("type42IsPain", (String) type42IsPain.getTag()) +
+                        WebServiceUtil.buildItem("type43IsBpChange", (String) type43IsBpChange.getTag()) +
+                        WebServiceUtil.buildItem("type43IsWeightChange", (String) type43IsWeightChange.getTag()) +
+                        WebServiceUtil.buildItem("type43IsYellow", (String) type43IsYellow.getTag()) +
+                        WebServiceUtil.buildItem("type43IsMensesChange", (String) type43IsMensesChange.getTag()) +
+                        WebServiceUtil.buildItem("type43IsMensesClose", (String) type43IsMensesClose.getTag()) +
+                        WebServiceUtil.buildItem("type43IsLocationChange", (String) type43IsLocationChange.getTag()) +
+                        WebServiceUtil.buildItem("type5IsKnifeOk", (String) type5IsKnifeOk.getTag()) +
+                        WebServiceUtil.buildItem("type5IsMensesOk", (String) type5IsMensesOk.getTag()) +
+                        WebServiceUtil.buildItem("type6IsMensesOk", (String) type6IsMensesOk.getTag()) +
                         WebServiceUtil.buildItem("type6IsTeachOther", (String) type6IsTeachOther.getTag());
 
         String xmlString = WebServiceUtil.buildXml(content);
         xmlString = "<?xml version=\"1.0\" encoding=\"utf-8\"?><root><request><femaleId>370521105207000017</femaleId><femaleName>秦玉玲</femaleName><femaleBirthday>1968-02-20</femaleBirthday><femaleMaritalStatus>21</femaleMaritalStatus><maleName>刘明安</maleName><maleBirthday>1969-03-12</maleBirthday><maleMaritalStatus>21</maleMaritalStatus><maritalChangeDate>1991-03-07</maritalChangeDate><boyAmount>1</boyAmount><girlAmount>1</girlAmount><orgid>370521105207</orgid><orgname>永胜村委会</orgname><isCondomAllergy>1</isCondomAllergy><isFeelSick>1</isFeelSick><isMensesPatient>0</isMensesPatient><isBlood>0</isBlood><bloodLast>25</bloodLast><bloodTimes>25</bloodTimes><isBreastPain>1</isBreastPain><getbookdate>2016-02-12</getbookdate><lastMensesDate>2016-05-12</lastMensesDate><pregnancyVisitTime>7</pregnancyVisitTime><isConceived>1</isConceived><hasBeenToldHealth>0</hasBeenToldHealth><bornStatus>1</bornStatus><bornDate>1999-01-12</bornDate><childtype>5</childtype><isBodyOk>0</isBodyOk><isHot>1</isHot><isStomachPain>0</isStomachPain><isVaginaBlood>1</isVaginaBlood><isBabyHealthy>0</isBabyHealthy><birthControlAfterBorn>600</birthControlAfterBorn><isMensesOkPost>1</isMensesOkPost><isMensesChangePost>1</isMensesChangePost><isBloodPost>0</isBloodPost><isStomachPainPost>1</isStomachPainPost><isMensesCausePain>1</isMensesCausePain><isLeukorrhoeaChange>1</isLeukorrhoeaChange><isLeukorrhoeaWrong>1</isLeukorrhoeaWrong><isCircleLost>1</isCircleLost><hasToldCheckCircle>0</hasToldCheckCircle><type21IsHot>0</type21IsHot><type21RedPain>0</type21RedPain><type21IsMensesBlood>1</type21IsMensesBlood><type21IsFeelSick>0</type21IsFeelSick><type21IsStomachPain>1</type21IsStomachPain><type21IsWc>0</type21IsWc><type22IsOk>1</type22IsOk><type22IsMensesOk>0</type22IsMensesOk><type22IsKnifeOk>0</type22IsKnifeOk><type22IsPain>1</type22IsPain><type22IsMensesWrong>0</type22IsMensesWrong><type3IsTesticleOk>0</type3IsTesticleOk><type41IsPain>0</type41IsPain><type41IsBlood>0</type41IsBlood><type42IsOk>0</type42IsOk><type42IsPain>1</type42IsPain><type43IsBpChange>1</type43IsBpChange><type43IsWeightChange>0</type43IsWeightChange><type43IsYellow>0</type43IsYellow><type43IsMensesChange>0</type43IsMensesChange><type43IsMensesClose>1</type43IsMensesClose><type43IsLocationChange>1</type43IsLocationChange><type5IsKnifeOk>0</type5IsKnifeOk><type5IsMensesOk>0</type5IsMensesOk><type6IsMensesOk>0</type6IsMensesOk><type6IsTeachOther>0</type6IsTeachOther><imageName>123</imageName><videoName>321</videoName><fixDate>2016-06-11</fixDate><longTimeMeasure>321</longTimeMeasure><visitDate>2016-01-01 02:08:42</visitDate></request></root>";
-        soapRequestStruct.addProperty(WS_Property_Binding,xmlString);
+        soapRequestStruct.addProperty(WS_Property_Binding, xmlString);
 //        soapRequestStruct.addProperty("image","");
 //        soapRequestStruct.addProperty("video","");
         DebugLog.e("WS_Property_Binding: " + xmlString);
 
-        new WebServiceTask(SuifangUploadActivity.this, "提交中...",soapRequestStruct, uploadListener).execute();
+        new WebServiceTask(SuifangUploadActivity.this, "提交中...", soapRequestStruct, uploadListener).execute();
 
     }
 
@@ -364,7 +377,7 @@ public class SuifangUploadActivity extends BaseActivity {
 //                DebugLog.e("JSON exception"+ e.getMessage());
 //                e.printStackTrace();
 //            }
-            DebugLog.d("XML   "+ content);
+            DebugLog.d("XML   " + content);
         }
 
         @Override
@@ -377,4 +390,88 @@ public class SuifangUploadActivity extends BaseActivity {
             showToast("网络异常，请稍后重试");
         }
     };
+
+    final String picTempPath = picFolder + "temp.jpg";
+    final int addPhoto = 102;
+
+    //拍照摄像
+    @OnClick(R.id.photo_add)
+    public void onAddPhoto(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            File file = new File(picTempPath);
+            if (file.exists()) {
+                file.delete();
+            }
+            FileUtil.createFile(picTempPath);
+            Uri fileUri = Uri.fromFile(file);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(takePictureIntent, addPhoto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case addPhoto:
+                    try {
+                        DebugLog.e("addPhoto");
+                        String filePath = picFolder + new Date().getTime() + ".jpg";
+                        saveBitmapToFile(new File(picTempPath), filePath);
+                        BaseApplication.loadImage(SuifangUploadActivity.this,photeTaked,filePath,R.drawable.ic_empty);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    }
+
+    public static String saveBitmapToFile(File file, String newpath) {
+        try {
+            // BitmapFactory options to downsize the image
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            o.inSampleSize = 6;
+            // factor of downsizing the image
+
+            FileInputStream inputStream = new FileInputStream(file);
+            //Bitmap selectedBitmap = null;
+            BitmapFactory.decodeStream(inputStream, null, o);
+            inputStream.close();
+
+            // The new size we want to scale to
+            final int REQUIRED_SIZE = 75;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE &&
+                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
+                scale *= 2;
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            inputStream = new FileInputStream(file);
+
+            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
+            inputStream.close();
+
+            File aa = new File(newpath);
+            FileOutputStream outputStream = new FileOutputStream(aa);
+            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            String filepath = aa.getAbsolutePath();
+            DebugLog.e("getAbsolutePath" + aa.getAbsolutePath());
+
+            return filepath;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

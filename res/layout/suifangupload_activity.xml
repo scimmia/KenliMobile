@@ -378,6 +378,60 @@
             <EditText
                 android:id="@+id/type6IsTeachOther"
                 style="@style/select_edittext"/>
+            <RelativeLayout>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="照片:"
+                        style="@style/textview_header_big"/>
+                <ImageView
+                        android:id="@+id/photo_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_delete"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
+                <ImageView
+                        android:id="@+id/photo_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_camera"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@+id/photo_delete"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
+            </RelativeLayout>
+            <ImageView android:id="@+id/phote_taked"/>
+            <RelativeLayout>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="视频:"
+                        style="@style/textview_header_big"/>
+                <ImageView
+                        android:id="@+id/video_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_delete"
+                        android:layout_centerInParent="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
+                <ImageView
+                        android:id="@+id/video_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@android:drawable/ic_menu_camera"
+                        android:layout_centerInParent="true"
+                        android:layout_toLeftOf="@+id/video_delete"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
+            </RelativeLayout>
+            <ImageView android:id="@+id/video_taked"/>
         </GridLayout>
 
     </LinearLayout>

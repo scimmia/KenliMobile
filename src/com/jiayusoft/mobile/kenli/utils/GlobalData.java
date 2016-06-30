@@ -98,6 +98,8 @@ public interface GlobalData {
 
     String baseFolder = Environment.getExternalStorageDirectory().getPath()+ File.separator+"JiayuSoft"+ File.separator;
     String updateFolder = baseFolder + "update" + File.separator;
+    String picFolder = baseFolder + "pic" + File.separator;
+
 
 
     public static final String WS_NameSpace = "http://com.zljy.oa.webservice";
