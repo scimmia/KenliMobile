@@ -142,4 +142,6 @@ public interface GlobalData {
     String[] haiciNames = { "一男孩",  "一女孩",  "一男一女",  "两男孩",  "两女孩",  };
     String[] haiciIDs = { "1",  "2",  "3",  "4",  "5",  };
 
+    String[] shifoubuxianNames = { "是",  "否", "不限",  };
+    String[] shifoubuxianIDs = { "1",  "0", "2",  };
 }

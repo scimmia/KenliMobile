@@ -60,5 +60,9 @@
                   android:label="@string/title_activity_wis_list"/>
         <activity android:name=".wis.WisDetailActivity"
                   android:label="@string/title_activity_wis_detail"/>
+        <activity android:name=".chati.ChatiSearchActivity"
+                  android:label="@string/title_activity_chati_search"/>
+        <activity android:name=".chati.ChatiResultActivity"
+                  android:label="@string/title_activity_chati_list"/>
     </application>
 </manifest>

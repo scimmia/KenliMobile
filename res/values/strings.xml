@@ -80,4 +80,7 @@
     <string name="title_activity_wis_search">查询WIS数据</string>
     <string name="title_activity_wis_list">选择育龄妇女</string>
     <string name="title_activity_wis_detail">妇女基本信息</string>
+    <string name="title_activity_chati_search">查体情况查询</string>
+    <string name="title_activity_chati_list">选择查体情况</string>
+    <string name="title_activity_chati_detail">查体情况</string>
 </resources>
