@@ -22,7 +22,7 @@
         <!--&lt;!&ndash; Change split action bar background color &ndash;&gt;-->
         <!--<item name="android:backgroundSplit">@color/skyblue</item>-->
         <item name="android:titleTextStyle">@style/CustomTitleTextStyle</item>
-        <item name="android:background">@color/sph_background</item>
+        <item name="android:background">@color/main_background</item>
     </style>
 
     <style name="CustomTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">

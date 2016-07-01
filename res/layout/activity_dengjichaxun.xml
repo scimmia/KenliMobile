@@ -5,6 +5,7 @@
             tools:context=".suifangdengji.FunvSearchActivity">
     <RelativeLayout
             android:id="@+id/main_layout"
+            android:background="@color/main_background"
             android:layout_width="match_parent" android:layout_height="wrap_content">
         <GridLayout
                 android:layout_width="match_parent"

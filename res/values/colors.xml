@@ -9,7 +9,7 @@
     <color name="Gray600">#999999</color>
 
     <color name="material_primary_green">#ff7bddab</color>
-    <color name="main_background">#ffdfcd86</color>
+    <color name="main_background">#ff7bddab</color>
     <color name="material_deep_teal_500">#ff009688</color>
 
     <color name="list_item_title">#fff</color>
