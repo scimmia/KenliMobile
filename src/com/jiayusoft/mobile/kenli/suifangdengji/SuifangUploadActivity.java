@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import butterknife.Bind;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
@@ -32,6 +33,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -152,6 +155,8 @@ public class SuifangUploadActivity extends BaseActivity {
     EditText type6IsTeachOther;
     @Bind(R.id.phote_taked)
     ImageView photeTaked;
+    @Bind(R.id.video_layout)
+    RelativeLayout videoLayout;
     @Bind(R.id.video_taked)
     ImageView videoTaked;
 
@@ -392,9 +397,12 @@ public class SuifangUploadActivity extends BaseActivity {
     };
 
     final String picTempPath = picFolder + "temp.jpg";
+    final String picPath = picFolder + "photo.jpg";
+    final String videoTempPath = picFolder + "temp.mp4";
     final int addPhoto = 102;
+    final int addVideo = 103;
 
-    //拍照摄像
+    //拍照
     @OnClick(R.id.photo_add)
     public void onAddPhoto(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -412,6 +420,67 @@ public class SuifangUploadActivity extends BaseActivity {
         }
     }
 
+    @OnClick(R.id.photo_delete)
+    public void onDeletePhoto(View view) {
+        try {
+            photeTaked.setVisibility(View.GONE);
+            File file = new File(picPath);
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //摄像
+    @OnClick(R.id.video_add)
+    public void onAddVideo(View view) {
+        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        try {
+            File file = new File(videoTempPath);
+            if (file.exists()) {
+                file.delete();
+            }
+            FileUtil.createFile(videoTempPath);
+            Uri fileUri = Uri.fromFile(file);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT , 10);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+            startActivityForResult(takeVideoIntent, addVideo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.video_delete)
+    public void onDeleteVideo(View view) {
+        try {
+            videoLayout.setVisibility(View.GONE);
+            File file = new File(videoTempPath);
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @OnClick(R.id.video_taked)
+    public void onPreviewVideo(View view) {
+        try {
+            File file = new File(videoTempPath);
+            if (file.exists()) {
+                Uri uri = Uri.fromFile(file);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "video/mp4");
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -420,10 +489,23 @@ public class SuifangUploadActivity extends BaseActivity {
                 case addPhoto:
                     try {
                         DebugLog.e("addPhoto");
-                        String filePath = picFolder + new Date().getTime() + ".jpg";
-                        saveBitmapToFile(new File(picTempPath), filePath);
-                        BaseApplication.loadImage(SuifangUploadActivity.this,photeTaked,filePath,R.drawable.ic_empty);
+                        File file = new File(picPath);
+                        if (file.exists()) {
+                            file.delete();
+                        }
+                        saveBitmapToFile(new File(picTempPath), picPath);
+                        photeTaked.setVisibility(View.VISIBLE);
+                        BaseApplication.loadImage(SuifangUploadActivity.this,photeTaked,picPath,R.drawable.ic_empty);
 
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case addVideo:
+                    try {
+                        DebugLog.e("addVideo");
+                        videoLayout.setVisibility(View.VISIBLE);
+                        BaseApplication.loadImage(SuifangUploadActivity.this,videoTaked,videoTempPath,R.drawable.ic_empty);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -432,7 +514,7 @@ public class SuifangUploadActivity extends BaseActivity {
         }
     }
 
-    public static String saveBitmapToFile(File file, String newpath) {
+    private String saveBitmapToFile(File file, String newpath) {
         try {
             // BitmapFactory options to downsize the image
             BitmapFactory.Options o = new BitmapFactory.Options();

@@ -389,7 +389,7 @@
                         android:id="@+id/photo_delete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_menu_delete"
+                        android:src="@android:drawable/ic_delete"
                         android:layout_centerInParent="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -398,7 +398,7 @@
                         android:id="@+id/photo_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_menu_camera"
+                        android:src="@drawable/ic_photo_camera"
                         android:layout_centerInParent="true"
                         android:layout_toLeftOf="@+id/photo_delete"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -416,7 +416,7 @@
                         android:id="@+id/video_delete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_menu_delete"
+                        android:src="@android:drawable/ic_delete"
                         android:layout_centerInParent="true"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
@@ -425,13 +425,25 @@
                         android:id="@+id/video_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@android:drawable/ic_menu_camera"
+                        android:src="@drawable/ic_video_camera"
                         android:layout_centerInParent="true"
                         android:layout_toLeftOf="@+id/video_delete"
                         android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />
             </RelativeLayout>
-            <ImageView android:id="@+id/video_taked"/>
+            <RelativeLayout
+                    android:id="@+id/video_layout"
+                    android:visibility="gone">
+                <ImageView android:id="@+id/video_taked"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_play_button"
+                        android:layout_centerInParent="true"
+                />
+            </RelativeLayout>
         </GridLayout>
 
     </LinearLayout>
