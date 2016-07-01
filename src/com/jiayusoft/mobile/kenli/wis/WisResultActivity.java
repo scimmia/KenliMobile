@@ -1,8 +1,10 @@
-package com.jiayusoft.mobile.kenli.suifangdengji;
+package com.jiayusoft.mobile.kenli.wis;
 
 import android.os.Bundle;
 import android.util.Xml;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.google.gson.Gson;
 import com.jiayusoft.mobile.kenli.R;
+import com.jiayusoft.mobile.kenli.suifangdengji.ChaXunResult;
 import com.jiayusoft.mobile.kenli.utils.DebugLog;
 import com.jiayusoft.mobile.kenli.utils.app.BaseActivity;
 import com.jiayusoft.mobile.kenli.utils.webservice.SoapRequestStruct;
@@ -25,8 +28,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.LinkedList;
 
-public class FunvResultActivity extends BaseActivity {
-
+/**
+ * Created by A on 2016/7/1.
+ */
+public class WisResultActivity extends BaseActivity {
     ItemAdapter mItemAdapter;
     private LinkedList<ChaXunResult> mResults;
 
@@ -34,9 +39,8 @@ public class FunvResultActivity extends BaseActivity {
     ListView mRvItems;
     @Bind(android.R.id.empty)
     TextView empty;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mResults = new LinkedList<>();
         mItemAdapter = new ItemAdapter();
@@ -49,7 +53,7 @@ public class FunvResultActivity extends BaseActivity {
                 DebugLog.e(json);
                 Bundle bundle = new Bundle();
                 bundle.putString(JsonBody,json);
-                beginActivity(FunvDetailActivity.class, bundle);
+                beginActivity(WisDetailActivity.class, bundle);
             }
         });
         initData();
@@ -57,7 +61,7 @@ public class FunvResultActivity extends BaseActivity {
 
     @Override
     protected void initContentView() {
-        setContentView(R.layout.activity_suifangchaxun_result);
+        setContentView(R.layout.activity_wis_result);
     }
 
     private void initData() {
@@ -72,7 +76,7 @@ public class FunvResultActivity extends BaseActivity {
             soapRequestStruct.addProperty(WS_Property_Binding, xmlString);
             DebugLog.e("WS_Property_Binding: " + xmlString);
 
-            new WebServiceTask(FunvResultActivity.this, "查询中...", soapRequestStruct, funvlistListener).execute();
+            new WebServiceTask(WisResultActivity.this, "查询中...", soapRequestStruct, funvlistListener).execute();
         }
     }
 
@@ -195,7 +199,7 @@ public class FunvResultActivity extends BaseActivity {
             holder.name.setText(mResults.get(position).getFemaleName());
             holder.cardid.setText(mResults.get(position).getFemaleCardid());
             holder.child.setText("现有男孩数：" + mResults.get(position).getBoyAmount() +
-                            "\t现有女孩数：" + mResults.get(position).getGirlAmount());
+                    "\t现有女孩数：" + mResults.get(position).getGirlAmount());
             return view;
         }
 
@@ -212,27 +216,4 @@ public class FunvResultActivity extends BaseActivity {
             }
         }
     }
-
-    //05-10 13:43:31.545 520-520/com.jiayusoft.mobile.kenli E/FunvResultActivity.java: [onItemClick:59]{"boyAmount":"1","femaleBirthday":"","femaleCardid":"","femaleId":"370521000000002152","femaleMaritalStatus":"","femaleName":"","girlAmount":"0","maleBirthday":"1981-01-14","maleCardid":"370521198101143617","maleMaritalStatus":"10","maleName":"饶国强","maritalChangeDate":"","orgid":"370521104207","orgname":"一村村委会"}
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_chaxun_new, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            beginActivity(SuifangdengjiActivity.class);
-//
-//            return true;
-//        }
-//
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }

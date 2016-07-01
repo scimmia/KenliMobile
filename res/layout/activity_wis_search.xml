@@ -2,8 +2,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:background="@color/main_background"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".suifangdengji.FunvSearchActivity">
+            android:layout_height="match_parent">
     <RelativeLayout
             android:id="@+id/main_layout"
             android:layout_width="match_parent" android:layout_height="wrap_content">
@@ -57,21 +56,6 @@
             <EditText
                     android:id="@+id/et_shenfenzheng"
                     style="@style/normal_edittext"/>
-            <TextView
-                    android:text="是否已随访:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/sp_shifousuifang"
-                    android:layout_gravity="center_vertical"
-                    android:minWidth="200dp"
-                    style="@style/select_edittext"
-            />
-            <TextView
-                    android:text="随访与否鉴定时间:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_suifangjiandingshijian"
-                    style="@style/select_edittext"/>
         </GridLayout>
 
     </RelativeLayout>

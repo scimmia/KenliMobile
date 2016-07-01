@@ -54,5 +54,11 @@
                   android:label="@string/title_activity_tongzhilist"/>
         <activity android:name=".tongzhixinxi.TongzhiDetailActivity"
                   android:label="@string/title_activity_tongzhidetail"/>
+        <activity android:name=".wis.WisSearchActivity"
+                  android:label="@string/title_activity_wis_search"/>
+        <activity android:name=".wis.WisResultActivity"
+                  android:label="@string/title_activity_wis_list"/>
+        <activity android:name=".wis.WisDetailActivity"
+                  android:label="@string/title_activity_wis_detail"/>
     </application>
 </manifest>

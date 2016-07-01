@@ -22,6 +22,7 @@ import com.jiayusoft.mobile.kenli.utils.app.clientinfo.ClientinfoAdapter;
 import com.jiayusoft.mobile.kenli.utils.app.clientinfo.ClientinfoItem;
 import com.jiayusoft.mobile.kenli.utils.app.viewPager.LoopViewPager;
 import com.jiayusoft.mobile.kenli.utils.app.viewPager.transforms.*;
+import com.jiayusoft.mobile.kenli.wis.WisSearchActivity;
 
 import java.util.ArrayList;
 
@@ -65,7 +66,7 @@ public class MainActivity extends BaseActivity {
         }
         iconItems = new ArrayList<ClientinfoItem>();
         iconItems.add(new ClientinfoItem(FunvSearchActivity.class, R.drawable.icon_main_suifangdengji, R.string.main_suifangdengji));
-        iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_wischaxun, R.string.main_wischaxun));
+        iconItems.add(new ClientinfoItem(WisSearchActivity.class, R.drawable.icon_main_wischaxun, R.string.main_wischaxun));
         iconItems.add(new ClientinfoItem(MainActivity.class, R.drawable.icon_main_chatiqingkuang, R.string.main_chatiqingkuangn));
         iconItems.add(new ClientinfoItem(TongzhiListActivity.class, R.drawable.icon_main_tongzhixiaoxi, R.string.main_tongzhixiaoxi));
         iconItems.add(new ClientinfoItem(TongxunluSearchActivity.class,R.drawable.icon_main_person,R.string.main_binganzhikong));

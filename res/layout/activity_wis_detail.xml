@@ -104,7 +104,7 @@
                     android:layout_gravity="center_vertical"
                     android:minWidth="200dp"
                     style="@style/select_edittext"
-                    />
+            />
         </GridLayout>
 
     </LinearLayout>

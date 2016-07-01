@@ -77,4 +77,7 @@
     <string name="title_activity_tongzhilist">通知列表</string>
     <string name="title_activity_tongzhidetail">通知信息</string>
     <string name="title_activity_suifangjibenxinxi">基本信息</string>
+    <string name="title_activity_wis_search">查询WIS数据</string>
+    <string name="title_activity_wis_list">选择育龄妇女</string>
+    <string name="title_activity_wis_detail">妇女基本信息</string>
 </resources>
