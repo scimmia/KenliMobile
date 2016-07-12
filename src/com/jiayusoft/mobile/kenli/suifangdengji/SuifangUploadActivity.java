@@ -383,6 +383,11 @@ public class SuifangUploadActivity extends BaseActivity {
 //                e.printStackTrace();
 //            }
             DebugLog.d("XML   " + content);
+            if (StringUtils.contains(content,"<result>0</result>")) {
+                showToast("提交成功。");
+            }else{
+                showToast("提交失败，请稍后重试");
+            }
         }
 
         @Override

@@ -31,40 +31,16 @@
                     android:id="@+id/et_nvfangshenfenzheng"
                     style="@style/select_edittext"/>
             <TextView
-                    android:text="女方婚姻状况:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_nvfang_hunyin"
-                    style="@style/select_edittext"/>
-            <TextView
                     android:text="女方出生年月:"
                     style="@style/textview_header_normal"/>
             <EditText
                     android:id="@+id/et_nvfang_chusheng"
                     style="@style/select_edittext"/>
             <TextView
-                    android:text="男方姓名:"
+                    android:text="女方婚姻状况:"
                     style="@style/textview_header_normal"/>
             <EditText
-                    android:id="@+id/et_nanfangxingming"
-                    style="@style/select_edittext"/>
-            <TextView
-                    android:text="男方身份证号:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_nanfangshenfenzheng"
-                    style="@style/select_edittext"/>
-            <TextView
-                    android:text="男方婚姻状况:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_nanfang_hunyin"
-                    style="@style/select_edittext"/>
-            <TextView
-                    android:text="男方出生年月:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_nanfang_chusheng"
+                    android:id="@+id/et_nvfang_hunyin"
                     style="@style/select_edittext"/>
             <TextView
                     android:text="婚姻变动时间:"
@@ -83,21 +59,11 @@
                     style="@style/textview_header_normal"/>
             <EditText
                     android:id="@+id/et_nvhaishu"
-                    style="@style/select_edittext"/>
-            <TextView
-                    android:text="长效措施种类:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_changxiaocuoshizhonglei"
-                    style="@style/select_edittext"/>
-            <TextView
-                    android:text="落实时间:"
-                    style="@style/textview_header_normal"/>
-            <EditText
-                    android:id="@+id/et_luoshishijian"
+                    android:minWidth="200dp"
                     style="@style/select_edittext"/>
             <TextView
                     android:text="落实单位:"
+                    android:minWidth="200dp"
                     style="@style/textview_header_normal"/>
             <EditText
                     android:id="@+id/luoshidanwei"

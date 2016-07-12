@@ -60,7 +60,9 @@ public class WisSearchActivity extends BaseActivity {
                             WebServiceUtil.buildItem("jdcode", (String) spJiedao.getTag())+
                             WebServiceUtil.buildItem("jwhcode", (String) spShequ.getTag())+
                             WebServiceUtil.buildItem("xm", String.valueOf(etXingming.getText()))+
-                            WebServiceUtil.buildItem("sfzh", String.valueOf(etShenfenzheng.getText()));
+                            WebServiceUtil.buildItem("sfzh", String.valueOf(etShenfenzheng.getText()))+
+                            WebServiceUtil.buildItem("flag", "")+
+                            WebServiceUtil.buildItem("sfrq", "");
             Bundle bundle = new Bundle();
             bundle.putString(JsonBody, content);
             beginActivity(WisResultActivity.class,bundle);
