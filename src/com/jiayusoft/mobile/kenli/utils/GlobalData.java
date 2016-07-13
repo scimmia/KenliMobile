@@ -104,7 +104,8 @@ public interface GlobalData {
 
     public static final String WS_NameSpace = "http://com.zljy.oa.webservice";
     public static final String SERVICE_URL = "http://113.128.228.118:9090/oa/ws/Wis4vWebServices";
-    String uploadFileUrl = "http://192.168.10.125:7080/mobile/oa/visit/upload";
+    String uploadFileUrl = "http://113.128.228.118:9090/mobile/oa/visit/upload";
+//    String uploadFileUrl = "http://192.168.10.125:7080/mobile/oa/visit/upload";
 
     //    public static final String SERVICE_URL = "http://113.128.228.118:9090/oa/ws/ImpData";
     public static final String WS_Method_getXianinfo = "getXianinfo";
